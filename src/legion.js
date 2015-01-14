@@ -1,5 +1,5 @@
-var legion = {};
+define(["legion/class"], function(Class) {
+	window.legion = {};
 
-//TODO - add module loader
-
-legion.Class = Class;
+	legion.Class = Class;
+});
