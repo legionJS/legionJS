@@ -2,7 +2,6 @@
 describe('Class', function() {
   describe('Inheritance', function() {
     it('Single inheritance', function() {
-      console.log("hi2");
       var A = legion.Class.extend({a: "a"});
       var B = A.extend({b: "b"});
 
