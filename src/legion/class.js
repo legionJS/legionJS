@@ -20,7 +20,7 @@ define(function() {
       // Call childFunction
       var returnValue = childFunction.apply(this, arguments);
 
-      // Restor the old parent
+      // Restore the old parent
       this.parent = tmp;
 
       return returnValue;
@@ -88,7 +88,7 @@ define(function() {
       Class.extendSingle = extendSingle;
 
       // If child is a function, reassign child to an instance of itself.
-      if (typeof child == "function") {
+      if (typeof child === "function") {
         extending = true;
         child = new child();
         extending = false;
@@ -102,8 +102,8 @@ define(function() {
       for (var key in child) {
 
         // If the property is a function call with this.parent assigned.
-        if (typeof child[key] == "function" && 
-            typeof Class.prototype[key] == "function") {
+        if (typeof child[key] === "function" && 
+            typeof Class.prototype[key] === "function") {
           Class.prototype[key] = createParent(child[key], Class.prototype[key]);
         } else {
           Class.prototype[key] = child[key];
