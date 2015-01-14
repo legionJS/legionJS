@@ -8,6 +8,16 @@
   <div id="mocha"></div>
   <script src="../node_modules/mocha/mocha.js"></script>
   <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/requirejs/require.js"></script>
+  <script type="text/javascript">
+    requirejs.config({
+        baseUrl: "../src",
+
+        paths: {
+          'legion': 'legion'
+        }
+    });
+  </script>
 
   <script>
     mocha.setup('bdd')
@@ -19,9 +29,12 @@
 
   <script>
     // Only tests run in real browser, injected script run if options.run == true
-    if (navigator.userAgent.indexOf('PhantomJS') < 0) {
-      mocha.run();
-    }
+    requirejs(['legion'], function(legion) {
+      if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+        mocha.run();
+      }
+    });
+    
   </script>
 </body>
 </html>
