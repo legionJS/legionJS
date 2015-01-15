@@ -27,9 +27,32 @@ define(function() {
     };
   };
 
+
   /*
     extend() extends the current Class with child and returns the new Class.
-    Uses extendSingle to do the work of extending.
+    Uses _extendSingle to do the work of extending.
+
+    @param {object} child - An object containing the properties to extend
+      Class with.
+
+    @return {function} - Returns a new class with this extended by child.
+  */
+  var extend = function(child) {
+
+    // If child is an array then call __extendSingle repeatedly for each element.
+    if (child instanceof Object) {
+      return this._extendSingle(child);
+    }
+  };
+
+
+  /*
+    implement() extends the current Class with child and returns the new Class.
+    Uses _extendSingle to do the work of extending.  Similar to extend, except
+    it can take other Classes/functions or an array of Classes/Functions/objects
+    instead of just a single object.  Properties will be copied over into the
+    new class from each and this.parent() works in overridden functions.  But
+    instanceof won't return true for each Class provided.
 
     @param {array, object, function} child - child can either be an object, 
       a function or an array of objects and/or functions.  If it is an object
@@ -37,24 +60,25 @@ define(function() {
       instance is created and it's properties are added to the current class;
       and if it is an array each element is handled in the above manner.
 
-    @return {function} - Returns a new class with this extended by child.
+    @return {function} - Returns a new Class with this extended by child.
   */
-  var extend = function(child) {
+  var implement = function(child) {
 
-    // If child is an array then call _extendSingle repeatedly for each element.
+    // If child is an array then call __extendSingle repeatedly for each element.
     if (child instanceof Array) {
       var _this = this;
       for (var i = 0; i < child.length; i++) {
-        _this = _this.extendSingle(child[i]);
+        _this = _this._extendSingle(child[i]);
       }
       return _this;
     } else {
-      return this.extendSingle(child);
+      return this._extendSingle(child);
     }
   };
 
+
   /*
-    extendSingle() extends the current class by a child class.
+    _extendSingle() extends the current class by a child class.
     It is defined inside an anonymous functiont to create a closure for the 
     "extending" variable.
 
@@ -62,10 +86,10 @@ define(function() {
 
     @return {function} - Returns a new class extended by child.
   */
-  var extendSingle = (function(){
+  var _extendSingle = (function(){
 
     /*
-      A variable that is used to keep track of whether the extendSingle
+      A variable that is used to keep track of whether the _extendSingle
       function is currently being called.  Needed to not call the init 
       function when creating a new instance of classes during extension.
     */
@@ -77,7 +101,7 @@ define(function() {
       var Class = function() {
 
         // "init" is used as the constructor for Classes so don't
-        // call it when we are in extendSingle.
+        // call it when we are in _extendSingle.
         if (!extending) {
           this.init.apply(this, arguments);
         }
@@ -85,14 +109,15 @@ define(function() {
 
       //Class.prototype.init = function() {};
       Class.extend = extend;
-      Class.extendSingle = extendSingle;
+      Class._extendSingle = _extendSingle;
+      Class.implement = implement;
 
       // If child is a function, reassign child to an instance of itself.
       if (typeof child === "function") {
         extending = true;
         child = new child();
         extending = false;
-      } 
+      }
       
       extending = true;
       Class.prototype = new this();
@@ -115,5 +140,5 @@ define(function() {
   })();
 
   // Return the base instance of Class
-  return extendSingle.call(function(){}, {init: function(){}});
+  return _extendSingle.call(function(){}, {init: function(){}});
 });

@@ -1,5 +1,3 @@
-define(["legion/class"], function(Class) {
+define([], function() {
 	window.legion = {};
-
-	legion.Class = Class;
 });
