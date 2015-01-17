@@ -1,4 +1,4 @@
-define(function() {
+define(['legion/strings'], function(strings) {
 
   /*
     createParent() returns a function that calls childFunction with 
@@ -140,5 +140,40 @@ define(function() {
   })();
 
   // Return the base instance of Class
-  return _extendSingle.call(function(){}, {init: function(){}});
+  return _extendSingle.call(function(){}, {
+    /*
+      init() takes an object of properties and adds them to the Class.  
+
+      @param {object} properties 
+    */
+    init: function(properties) {
+      this.mixin(properties, true);
+    },
+
+    /*
+      mixin() adds the properties in properties to this object.  By default
+      it will not override existing functions with functions included in the
+      properties object because this will not maintain this.parent().
+      It is recommended to use extend or implement in order to add new 
+      functions.  This behavior can be overridden by passing false to the
+      safe parameter.
+
+      @param {object} properties
+      @param {boolean} safe
+      @return {object} this
+    */
+    mixin: function(properties, safe) {
+      for (var key in properties) {
+
+        //Check if it's overriding a function and if using safe mode
+        if (typeof properties[key] !== 'function' || !(key in this) || !safe) {
+          this[key] = properties[key];
+        } else {
+          legion.log(strings[legion.locale]['unsafe_mixin']);
+        }
+      }
+      return this;
+    }
+
+  });
 });
