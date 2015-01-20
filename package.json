@@ -2,30 +2,35 @@
   "name": "legionJS",
   "version": "0.0.0",
   "description": "JavaScript 2D Game Engine with Multiplayer Support",
-  "main": "index.js",
-  "dependencies": {
-    "chai": "^1.10.0",
-    "requirejs": "^2.1.15"
-  },
-  "devDependencies": {
-    "mocha": "^2.1.0"
-  },
-  "scripts": {
-    "test": "mocha"
-  },
+  "author": "David Leonard",
+  "contributors": [
+    { "name": "David Leonard" },
+    { "name": "Jeremy Neiman" },
+    { "name": "Kevin Chan" }
+  ],
+  "homepage": "https://github.com/DrkSephy/legionJS",
   "repository": {
     "type": "git",
     "url": "https://github.com/DrkSephy/legionJS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DrkSephy/legionJS/issues"
+  },
+  "license": "MIT",
+  "main": "src/legion.js",
+  "scripts": {
+    "test": "mocha"
   },
   "keywords": [
     "JavaScript",
     "2D",
     "Multiplayer"
   ],
-  "author": "David Leonard",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/DrkSephy/legionJS/issues"
+  "dependencies": {
+    "requirejs": "^2.1.15"
   },
-  "homepage": "https://github.com/DrkSephy/legionJS"
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.1.0"
+  }
 }
