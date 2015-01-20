@@ -1,5 +1,10 @@
 // tests.js
-define(['legion/class', 'legion/entity', 'legion/environment'], function(Class, Entity, Environment) {
+define([
+  'legion/class', 
+  'legion/entity', 
+  'legion/environment',
+  'legion/game'
+], function(Class, Entity, Environment, Game) {
   describe('Class', function() {
     it('Single inheritance', function() {
       var A = Class.extend({a: 'a'});
@@ -249,6 +254,45 @@ define(['legion/class', 'legion/entity', 'legion/environment'], function(Class, 
       chai.assert.equal(e.entities[0], a);
       chai.assert.equal(e.entities[1], b);
       chai.assert.equal(e.entities.length, 2);
+    });
+  });
+
+  describe('Timer', function() {
+    it('1 Second Timer', function(done) {
+      var g = new Game();
+      var t = g.createTimer({target: 1000});
+      g.loop();
+      setTimeout(function() {
+        g.paused = true;
+        chai.assert.equal(t.triggered(), 1);
+        done();
+      }, 1050);
+    });
+
+    it('Looping Timer', function(done) {
+      var g = new Game();
+      var t = g.createTimer({target: 250, loop: true});
+      g.loop();
+      setTimeout(function() {
+        g.paused = true;
+        chai.assert.equal(t.triggered(), 4);
+        done();
+      }, 1050);
+    });
+
+    it('Looping Timer + Constant Checking', function(done) {
+      var g = new Game();
+      var t = g.createTimer({target: 250, loop: true});
+      g.loop();
+      var count = 0;
+      var i = setInterval(function() {
+        chai.assert.equal(t.triggered(), 1);
+        if (++count === 4) {
+          clearInterval(i);
+          g.paused = true;
+          done();
+        }
+      }, 275);
     });
   });
 });
