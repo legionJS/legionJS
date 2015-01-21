@@ -1,5 +1,12 @@
-define(["legion/class"], function(Class) {
-	window.legion = {};
-
-	legion.Class = Class;
+define([], function() {
+  window.legion = {
+    debug: true,
+    locale: 'en',
+    // TODO - implement proper logging.
+    log: function(message) {
+      if (this.debug) {
+        console.log(message);
+      }
+    }
+  };
 });
