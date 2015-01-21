@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "chai": "^1.10.0",
+    "pixi.js": "^2.2.3",
     "requirejs": "^2.1.15"
   },
   "devDependencies": {
