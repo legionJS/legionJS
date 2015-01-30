@@ -16,6 +16,7 @@ define(['legion/class'], function(Class) {
       @param {object} properties 
     */
     init: function(properties) {
+      properties = typeof properties !== 'undefined' ? properties : {};
       this.parent(properties);
     },
 
