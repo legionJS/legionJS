@@ -1,5 +1,5 @@
 define([], function() {
-  window.legion = {
+  legion = {
     debug: true,
     locale: 'en',
     // TODO - implement proper logging.

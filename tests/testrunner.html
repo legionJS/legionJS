@@ -21,13 +21,17 @@
   </script>
 
   <script>
-    mocha.setup('bdd')
+    mocha.setup('bdd');
     mocha.reporter('html');
-    // Only tests run in real browser, injected script run if options.run == true
-    requirejs(['legion', 'tests/tests'], function(legion) {
-      if (navigator.userAgent.indexOf('PhantomJS') < 0) {
-        mocha.run();
-      }
+
+    requirejs([
+      'legion',
+      'tests/class',
+      'tests/entity',
+      'tests/environment',
+      'tests/timer'
+    ], function() {
+       mocha.run();
     });
     
   </script>
