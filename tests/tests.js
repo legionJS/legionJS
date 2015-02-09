@@ -5,6 +5,7 @@ define.config({
 
   paths: {
     'legion': '../src/legion',
+    'pixi':  '../node_modules/pixi.js/bin/pixi',
     'tests': '.'
   }
 });
