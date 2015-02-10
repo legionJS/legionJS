@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>pixi.js example 1</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000000;
+    }
+  </style>
+  <script src="../node_modules/requirejs/require.js"></script>
+
+</head>
+<body>
+  <script>
+
+  requirejs.config({
+        baseUrl: "../",
+
+        paths: {
+          'legion': 'src/legion',
+          'pixi':  'node_modules/pixi.js/bin/pixi'
+        },
+
+        shim: {
+          'pixi': {
+            exports: 'PIXI'
+          }
+        }
+    });
+  
+  requirejs([
+      'legion',
+      'legion/environment',
+      'legion/game',
+      'legion/entity'
+    ], function(legion, Environment, Game, Entity) {
+      // Create canvas and set it to 500x500
+      legion.init(500, 500); 
+      
+      // Create a new game and environment, and assign the environment
+      // To the game.
+      var game = new Game();
+      var env = new Environment({backgroundColor: 0x66FF99});
+      game.environment = env;
+
+      // Create a raw PIXI display object
+      var texture = PIXI.Texture.fromImage("bunny.png");
+      var bunny = new PIXI.Sprite(texture);
+      bunny.anchor.x = 0.5;
+      bunny.anchor.y = 0.5;
+
+      // move the sprite t the center of the screen
+      bunny.position.x = 200;
+      bunny.position.y = 150;
+
+      // Create an entity with the displayObject
+      var ent = new Entity({displayObject: bunny});
+
+      // Add it to the environment
+      env.addEntity(ent);
+
+      // Start Game
+      game.loop();
+    });
+
+  </script>
+
+  </body>
+</html>

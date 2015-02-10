@@ -1,5 +1,5 @@
 define(['legion/class', 'legion/timer'], function(Class, Timer) {
-  return Class.extend({
+  var Game = Class.extend({
 
     // The target FPS
     fps: 60,
@@ -38,7 +38,20 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
         t = t > 4 ? t : 4;
         this._loopTimeout = setTimeout(this.loop.bind(this), t);
       }
+
+      this._update();
     },
+
+
+    /*
+      _update() is called once each frame to the current environment.
+    */
+    _update: function() {
+      if (this.environment) {
+        this.environment._update();
+      }
+    },
+
 
     /*
       createTimer() creates and returns a timer for the given milliseconds.
@@ -55,6 +68,7 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
       return timer;
     },
 
+
     /*
       _updateTimers() updates all the timers in this.timers
     */
@@ -65,4 +79,29 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
     }
     
   });
+
+  // On node return a game without rendering
+  if (legion.isNode) {
+    return Game;
+  } else {
+    return Game.extend({
+
+      /*
+        loop() is the main game loop.
+      */
+      loop: function() {
+        this.parent();
+        this._render();
+      },
+
+      /*
+        _render() renders the environment on the canvas.
+      */
+      _render: function() {
+        if (this.environment) {
+          this.environment._render();
+        }
+      }
+    });
+  }
 });
