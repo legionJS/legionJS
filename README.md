@@ -12,6 +12,11 @@ If you are on a Mac, you may need to run:
 
     sudo npm install
 
+Run tests with:
+
+	npm test
+
+
 # Contributing
 
 All pull requests should be sent to the `dev` branch. Once the new features are tested to be stable within the `dev`
