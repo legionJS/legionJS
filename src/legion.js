@@ -1,12 +1,20 @@
+'use strict';
+/* jshint browser: true */
+
 // Check if running on node.js
 var isNode = false;
-
 if (typeof module !== 'undefined' && module.exports) {
   isNode = true;
 }
 
+// If on browser create a "global" variable which points to window
+// and can be referenced instead of window for consistency.  
+if (!isNode) {
+  window.global = window;
+}
+
 // Create legion global
-legion = {
+global.legion = {
   isNode: isNode,
   renderer: null,
 
@@ -30,12 +38,12 @@ legion = {
 // If on node, just return legion, else first include PIXI
 if (isNode) {
   define([], function() {
-    return legion;
-  })
+    return global.legion;
+  });
 } else {
   define(['pixi'], function(pixi) {
-    PIXI = pixi;
+    global.PIXI = pixi;
 
-    return legion;
+    return global.legion;
   });
 }

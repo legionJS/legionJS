@@ -1,3 +1,5 @@
+'use strict';
+
 define(['legion/class'], function(Class) {
   var Environment = Class.extend({
 
@@ -31,7 +33,8 @@ define(['legion/class'], function(Class) {
     },
 
     /*
-      _update() is called once each frame and calls update for all objects within it.
+      _update() is called once each frame and calls update for all
+      objects within it.
     */
     _update: function() {
       for (var i = 0; i < this.entities.length; i++) {

@@ -6,9 +6,15 @@
   "license": "MIT",
   "author": "David Leonard",
   "contributors": [
-    { "name": "David Leonard" },
-    { "name": "Jeremy Neiman" },
-    { "name": "Kevin Chan" }
+    {
+      "name": "David Leonard"
+    },
+    {
+      "name": "Jeremy Neiman"
+    },
+    {
+      "name": "Kevin Chan"
+    }
   ],
   "homepage": "https://github.com/DrkSephy/legionJS",
   "repository": {
@@ -19,7 +25,8 @@
     "url": "https://github.com/DrkSephy/legionJS/issues"
   },
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha tests/tests.js"
+    "test": "node ./node_modules/mocha/bin/mocha tests/tests.js",
+    "pretest": "node ./node_modules/jshint/bin/jshint src/"
   },
   "keywords": [
     "JavaScript",
@@ -32,7 +39,8 @@
     "requirejs": "^2.1.15"
   },
   "devDependencies": {
-    "mocha": "^2.1.0",
-    "chai": "^1.10.0"
-  },
+    "chai": "^1.10.0",
+    "jshint": "^2.6.0",
+    "mocha": "^2.1.0"
+  }
 }

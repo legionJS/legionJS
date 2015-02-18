@@ -1,3 +1,5 @@
+'use strict';
+
 define(['legion/class'], function(Class) {
   return Class.extend({
 
