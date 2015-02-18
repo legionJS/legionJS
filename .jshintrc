@@ -1,6 +1,6 @@
 {
   // ENVIRONMENTS
-  "browser": true,
+  //"browser": true,
   //"jquery": true,
   "node": true,
 
@@ -20,5 +20,5 @@
   "eqnull": true,
 
   // CUSTOM GLOBALS
-  "globals": {}
+  "predef": ["legion", "define", "PIXI"]
 }

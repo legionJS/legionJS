@@ -5,7 +5,6 @@ define([
 
   describe('Class', function() {
     it('Single inheritance', function() {
-      console.dir(Class)
       var A = Class.extend({a: 'a'});
       var B = A.extend({b: 'b'});
 

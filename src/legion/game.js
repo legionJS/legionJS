@@ -1,3 +1,5 @@
+'use strict';
+
 define(['legion/class', 'legion/timer'], function(Class, Timer) {
   var Game = Class.extend({
 
@@ -29,9 +31,9 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
       loop() is the main game loop.
     */
     loop: function() {
-      var new_clock = (new Date()).getTime();
-      var delta = new_clock - this.clock;
-      this.clock = new_clock;
+      var newClock = (new Date()).getTime();
+      var delta = newClock - this.clock;
+      this.clock = newClock;
       this._updateTimers(delta);
       if (!this.paused) {
         var t = Math.floor(this.spf - delta);

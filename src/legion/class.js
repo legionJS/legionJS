@@ -1,3 +1,5 @@
+'use strict';
+
 define(['legion/strings'], function(strings) {
 
   /*
@@ -39,7 +41,8 @@ define(['legion/strings'], function(strings) {
   */
   var extend = function(child) {
 
-    // If child is an array then call __extendSingle repeatedly for each element.
+    // If child is an array then call __extendSingle repeatedly for each
+    // element.
     if (child instanceof Object) {
       return this._extendSingle(child);
     }
@@ -64,7 +67,8 @@ define(['legion/strings'], function(strings) {
   */
   var implement = function(child) {
 
-    // If child is an array then call __extendSingle repeatedly for each element.
+    // If child is an array then call __extendSingle repeatedly for 
+    // each element.
     if (child instanceof Array) {
       var _this = this;
       for (var i = 0; i < child.length; i++) {
@@ -113,9 +117,9 @@ define(['legion/strings'], function(strings) {
       Class.implement = implement;
 
       // If child is a function, reassign child to an instance of itself.
-      if (typeof child === "function") {
+      if (typeof child === 'function') {
         extending = true;
-        child = new child();
+        child = new child(); // jshint ignore:line
         extending = false;
       }
       
@@ -127,8 +131,8 @@ define(['legion/strings'], function(strings) {
       for (var key in child) {
 
         // If the property is a function call with this.parent assigned.
-        if (typeof child[key] === "function" && 
-            typeof Class.prototype[key] === "function") {
+        if (typeof child[key] === 'function' && 
+            typeof Class.prototype[key] === 'function') {
           Class.prototype[key] = createParent(child[key], Class.prototype[key]);
         } else {
           Class.prototype[key] = child[key];
@@ -169,7 +173,7 @@ define(['legion/strings'], function(strings) {
         if (typeof properties[key] !== 'function' || !(key in this) || !safe) {
           this[key] = properties[key];
         } else {
-          legion.log(strings[legion.locale]['unsafe_mixin']);
+          legion.log(strings[legion.locale].unsafeMixin);
         }
       }
       return this;
