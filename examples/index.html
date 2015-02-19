@@ -79,9 +79,19 @@
       });
       env.addEntity(ent2);
 
+      var ent3 = new (Entity.implement([DisplayObject, Shape]))({
+        x: 250, y:250, r: 30,
+        color: 0x0000FF, shape: 'circle'
+      });
+      env.addEntity(ent3);
+
+
+      /* Movement to make things exciting! */
       setInterval(function() {
         ent.y = (ent.y + 1) % 500;
-        ent2.x = (ent2.x +1) % 500;
+        ent2.x = (ent2.x +3) % 500;
+
+        ent3.x = ent3.y = (ent3.x + 2) % 500;
       }, 4);
 
 

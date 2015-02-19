@@ -14,4 +14,5 @@ define.config({
 require('./class');
 require('./entity');
 require('./environment');
+require('./graphics');
 require('./timer');

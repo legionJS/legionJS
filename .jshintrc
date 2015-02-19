@@ -15,6 +15,7 @@
   "strict": true,
   "undef": true,
   "unused": true,
+  "curly": true,
 
   // RELAXING OPTIONS
   "eqnull": true,
