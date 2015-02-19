@@ -18,12 +18,12 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
     /*
       init({fps: 60})
 
-      @param {object} properties 
+      @param {object} properties
     */
     init: function(properties) {
       this.parent(properties);
       this.clock = (new Date()).getTime();
-      this.spf = 1000/this.fps;
+      this.spf = 1000 / this.fps;
     },
 
 
@@ -79,7 +79,6 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
         this._timers[i].tick(delta);
       }
     }
-    
   });
 
   // On node return a game without rendering

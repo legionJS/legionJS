@@ -5,11 +5,11 @@
 */
 define([], function() {
 
-  //Base Shape interface for both browser and server. 
+  //Base Shape interface for both browser and server.
   var Shape = {
     _createBoundingBox: function() {
       if (this.shape === 'circle') {
-        this.w = this.h = this.r*2;
+        this.w = this.h = this.r * 2;
       }
     }
   };
@@ -38,7 +38,7 @@ define([], function() {
       if (this.shape === 'rect') {
         graphics.drawRect(0, 0, this.w, this.h);
       } else if (this.shape === 'circle') {
-        graphics.drawCircle(0, 0, this.r);       
+        graphics.drawCircle(0, 0, this.r);
       }
 
       this.displayObject = graphics;

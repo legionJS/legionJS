@@ -3,8 +3,8 @@
 
 define([], function() {
   return {
-    'en': {
-      'unsafeMixin': 'Use Entity.mixin with safe set to false to override functions.'
+    en: {
+      unsafeMixin: 'Use Entity.mixin with safe set to false to override functions.'
     }
   };
 });
