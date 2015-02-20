@@ -15,7 +15,7 @@ define(['legion/class'], function(Class) {
     /*
       init()
 
-      @param {object} properties 
+      @param {object} properties
     */
     init: function(properties) {
       properties = typeof properties !== 'undefined' ? properties : {};
@@ -57,13 +57,13 @@ define(['legion/class'], function(Class) {
       /*
         init()
 
-        @param {object} properties 
+        @param {object} properties
       */
       init: function(properties) {
         properties = typeof properties !== 'undefined' ? properties : {};
         this.parent(properties);
 
-        var backgroundColor = 'backgroundColor' in properties ? 
+        var backgroundColor = 'backgroundColor' in properties ?
           properties.backgroundColor : 0x000000;
 
         this.stage = new PIXI.Stage(backgroundColor);

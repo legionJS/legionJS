@@ -3,7 +3,7 @@
 define(['legion/strings'], function(strings) {
 
   /*
-    createParent() returns a function that calls childFunction with 
+    createParent() returns a function that calls childFunction with
     parentFunction added as "this.parent" to the scope of childFunction.
 
     @param {function} childFunction - the function to call
@@ -11,7 +11,7 @@ define(['legion/strings'], function(strings) {
 
     @return {function}
   */
-  var createParent = function(childFunction, parentFunction) {  
+  var createParent = function(childFunction, parentFunction) {
     return function() {
 
       // Save this.parent as a temporary variable in case parent functions are
@@ -57,7 +57,7 @@ define(['legion/strings'], function(strings) {
     new class from each and this.parent() works in overridden functions.  But
     instanceof won't return true for each Class provided.
 
-    @param {array, object, function} child - child can either be an object, 
+    @param {array, object, function} child - child can either be an object,
       a function or an array of objects and/or functions.  If it is an object
       it's properties are added to the current class; if it is a function a new
       instance is created and it's properties are added to the current class;
@@ -67,7 +67,7 @@ define(['legion/strings'], function(strings) {
   */
   var implement = function(child) {
 
-    // If child is an array then call __extendSingle repeatedly for 
+    // If child is an array then call __extendSingle repeatedly for
     // each element.
     if (child instanceof Array) {
       var _this = this;
@@ -83,24 +83,24 @@ define(['legion/strings'], function(strings) {
 
   /*
     _extendSingle() extends the current class by a child class.
-    It is defined inside an anonymous functiont to create a closure for the 
+    It is defined inside an anonymous functiont to create a closure for the
     "extending" variable.
 
     @param {object, function} child - child to extend the current Class with.
 
     @return {function} - Returns a new class extended by child.
   */
-  var _extendSingle = (function(){
+  var _extendSingle = (function() {
 
     /*
       A variable that is used to keep track of whether the _extendSingle
-      function is currently being called.  Needed to not call the init 
+      function is currently being called.  Needed to not call the init
       function when creating a new instance of classes during extension.
     */
     var extending;
 
     return function(child) {
-      
+
       // Base Class definition
       var Class = function() {
 
@@ -122,7 +122,7 @@ define(['legion/strings'], function(strings) {
         child = new child(); // jshint ignore:line
         extending = false;
       }
-      
+
       extending = true;
       Class.prototype = new this();
       extending = false;
@@ -131,24 +131,24 @@ define(['legion/strings'], function(strings) {
       for (var key in child) {
 
         // If the property is a function call with this.parent assigned.
-        if (typeof child[key] === 'function' && 
+        if (typeof child[key] === 'function' &&
             typeof Class.prototype[key] === 'function') {
           Class.prototype[key] = createParent(child[key], Class.prototype[key]);
         } else {
           Class.prototype[key] = child[key];
         }
       }
-      
+
       return Class;
     };
   })();
 
   // Return the base instance of Class
-  return _extendSingle.call(function(){}, {
+  return _extendSingle.call(function() {}, {
     /*
-      init() takes an object of properties and adds them to the Class.  
+      init() takes an object of properties and adds them to the Class.
 
-      @param {object} properties 
+      @param {object} properties
     */
     init: function(properties) {
       this.mixin(properties, true);
@@ -158,7 +158,7 @@ define(['legion/strings'], function(strings) {
       mixin() adds the properties in properties to this object.  By default
       it will not override existing functions with functions included in the
       properties object because this will not maintain this.parent().
-      It is recommended to use extend or implement in order to add new 
+      It is recommended to use extend or implement in order to add new
       functions.  This behavior can be overridden by passing false to the
       safe parameter.
 

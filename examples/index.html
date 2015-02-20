@@ -34,8 +34,10 @@
       'legion',
       'legion/environment',
       'legion/game',
-      'legion/entity'
-    ], function(legion, Environment, Game, Entity) {
+      'legion/entity',
+      'legion/graphics/displayobject',
+      'legion/graphics/shape'
+    ], function(legion, Environment, Game, Entity, DisplayObject, Shape) {
       // Create canvas and set it to 500x500
       legion.init(500, 500); 
       
@@ -45,6 +47,9 @@
       var env = new Environment({backgroundColor: 0x66FF99});
       game.environment = env;
 
+
+      /* Raw PIXI Display Object */
+
       // Create a raw PIXI display object
       var texture = PIXI.Texture.fromImage("bunny.png");
       var bunny = new PIXI.Sprite(texture);
@@ -52,14 +57,43 @@
       bunny.anchor.y = 0.5;
 
       // move the sprite t the center of the screen
-      bunny.position.x = 200;
-      bunny.position.y = 150;
+      //bunny.position.x = 200;
+      //bunny.position.y = 150;
 
       // Create an entity with the displayObject
-      var ent = new Entity({displayObject: bunny});
+      var ent = new (Entity.implement(DisplayObject))({
+        displayObject: bunny, x: 200, y: 150
+      });
 
       // Add it to the environment
       env.addEntity(ent);
+
+
+      /* Basic Shapes */
+
+      // Create an entity that implements Shape and create
+      // a rectangle instance.
+      var ent2 = new (Entity.implement([DisplayObject, Shape]))({
+        w: 50, h: 50, x: 300, y:300,
+        color: 0xFFFF00, shape: 'rect'
+      });
+      env.addEntity(ent2);
+
+      var ent3 = new (Entity.implement([DisplayObject, Shape]))({
+        x: 250, y:250, r: 30,
+        color: 0x0000FF, shape: 'circle'
+      });
+      env.addEntity(ent3);
+
+
+      /* Movement to make things exciting! */
+      setInterval(function() {
+        ent.y = (ent.y + 1) % 500;
+        ent2.x = (ent2.x +3) % 500;
+
+        ent3.x = ent3.y = (ent3.x + 2) % 500;
+      }, 4);
+
 
       // Start Game
       game.loop();

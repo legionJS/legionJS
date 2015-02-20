@@ -21,7 +21,7 @@ define(['legion/class'], function(Class) {
     /*
       init({target: 0, loop: false})
 
-      @param {object} properties 
+      @param {object} properties
     */
     init: function(properties) {
       //this._clock = legion.currentTime;
@@ -44,7 +44,6 @@ define(['legion/class'], function(Class) {
           this.reset(true);
         }
       }
-      
     },
 
 
@@ -58,7 +57,7 @@ define(['legion/class'], function(Class) {
 
     /*
       triggered() returns the number of times the timer has triggered since
-      triggered was last called.  Will usually only be 1 unless automatic 
+      triggered was last called.  Will usually only be 1 unless automatic
       looping is enabled.
     */
     triggered: function() {
