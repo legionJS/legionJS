@@ -8,7 +8,7 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 // If on browser create a "global" variable which points to window
-// and can be referenced instead of window for consistency.  
+// and can be referenced instead of window for consistency.
 if (!isNode) {
   window.global = window;
 }
@@ -18,9 +18,9 @@ global.legion = {
   isNode: isNode,
   renderer: null,
 
-  init: function(w,h) {
+  init: function(w, h) {
     if (!isNode) {
-      this.renderer = PIXI.autoDetectRenderer(w,h);
+      this.renderer = PIXI.autoDetectRenderer(w, h);
       document.body.appendChild(this.renderer.view);
     }
   },

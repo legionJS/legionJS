@@ -12,7 +12,5 @@ define(['legion/class'], function(Class) {
     _update: function() {
 
     }
-
-    
   });
 });
