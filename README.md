@@ -23,3 +23,7 @@ All pull requests should be sent to the `dev` branch. Once the new features are 
 branch, it will be merged into the `master` branch.
 
 For consistent coding style, this project will adhere to the [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript). 
+
+# Useful Links
+
+[Build a 2D game physics engine](http://www.ibm.com/developerworks/library/wa-build2dphysicsengine/)
