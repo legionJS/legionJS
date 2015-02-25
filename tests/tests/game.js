@@ -10,6 +10,7 @@ define([
           this.parent();
           this.paused = true;
           done();
+          done = null;
         }
       }))();
       g.environment = new Environment();
