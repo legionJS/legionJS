@@ -10,7 +10,7 @@ define.config({
   }
 });
 
-
+require('./tests/legion');
 require('./tests/class');
 require('./tests/entity');
 require('./tests/environment');
