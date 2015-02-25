@@ -44,7 +44,7 @@
     "jscs": "^1.11.3",
     "jshint": "^2.6.0",
     "mocha": "^2.1.0",
-    "mocha-phantomjs": "^3.5.3",
+    "mocha-phantomjs": "git://github.com/docmarionum1/mocha-phantomjs.git",
     "mocha-phantomjs-istanbul": "0.0.2",
     "phantomjs": "^1.9.15"
   }
