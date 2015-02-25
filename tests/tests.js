@@ -16,3 +16,11 @@ require('./entity');
 require('./environment');
 require('./graphics');
 require('./timer');
+
+//Make sure all src files are included so that coverage will take into account untested files.
+file = require('file');
+file.walk('src', function(_, dirPath, dirs, files) {
+  for (var i = 0; i < files.length; i++) {
+    require('../' + files[i].split('.js')[0]);
+  }
+});
