@@ -10,6 +10,7 @@ define([], function() {
   } else {
     return {
       _update: function() {
+        this.parent();
         this.displayObject.x = this.x;
         this.displayObject.y = this.y;
       }
