@@ -16,6 +16,7 @@ require('./entity');
 require('./environment');
 require('./graphics');
 require('./timer');
+require('./util')
 
 //Make sure all src files are included so that coverage will take into account untested files.
 file = require('file');
