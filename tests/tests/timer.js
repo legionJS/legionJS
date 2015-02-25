@@ -6,6 +6,7 @@ define([
     it('1 Second Timer', function(done) {
       var g = new Game();
       var t = g.createTimer({target: 1000});
+      chai.assert.equal(t.delta(), 1000);
       g.loop();
       setTimeout(function() {
         g.paused = true;
@@ -39,5 +40,20 @@ define([
         }
       }, 275);
     });
+
+    it('Reset Timer', function(done) {
+      var g = new Game();
+      var t = g.createTimer({target: 500});
+      g.loop();
+      setTimeout(function() {
+        g.paused = true;
+        chai.assert(t._elapsed > 500);
+        chai.assert(t.delta() < 0);
+        t.reset();
+        chai.assert(t._elapsed == 0);
+        done();
+      }, 600);
+    });
+
   });
 });
