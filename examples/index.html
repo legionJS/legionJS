@@ -36,8 +36,9 @@
       'legion/game',
       'legion/entity',
       'legion/graphics/displayobject',
-      'legion/graphics/shape'
-    ], function(legion, Environment, Game, Entity, DisplayObject, Shape) {
+      'legion/graphics/shape',
+      'legion/input'
+    ], function(legion, Environment, Game, Entity, DisplayObject, Shape, Input) {
       // Create canvas and set it to 500x500
       legion.init(500, 500); 
       
@@ -56,12 +57,24 @@
       bunny.anchor.x = 0.5;
       bunny.anchor.y = 0.5;
 
-      // move the sprite t the center of the screen
-      //bunny.position.x = 200;
-      //bunny.position.y = 150;
-
       // Create an entity with the displayObject
-      var ent = new (Entity.implement(DisplayObject))({
+      var ent = new (Entity.implement([DisplayObject, {
+        _update: function() {
+          this.parent();
+          if (Input.state(Input.keys.UP)) {
+            this.y -= 1;
+          }
+          if (Input.state(Input.keys.DOWN)) {
+            this.y += 1;
+          }
+          if (Input.state(Input.keys.LEFT)) {
+            this.x -= 1;
+          }
+          if (Input.state(Input.keys.RIGHT)) {
+            this.x += 1;
+          }
+        }
+      }]))({
         displayObject: bunny, x: 200, y: 150
       });
 
@@ -88,11 +101,13 @@
 
       /* Movement to make things exciting! */
       setInterval(function() {
-        ent.y = (ent.y + 1) % 500;
+        //ent.y = (ent.y + 1) % 500;
         ent2.x = (ent2.x +3) % 500;
 
         ent3.x = ent3.y = (ent3.x + 2) % 500;
       }, 4);
+
+
 
 
       // Start Game

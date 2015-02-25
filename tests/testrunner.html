@@ -14,9 +14,12 @@
         baseUrl: "../",
 
         paths: {
-          'legion': 'src/legion',
+          'legion': [
+            'src_instrumented/legion',
+            'src/legion'
+          ],
           'pixi':  'node_modules/pixi.js/bin/pixi',
-          'tests': 'tests'
+          'tests': 'tests/tests'
         }
     });
   </script>
@@ -27,13 +30,22 @@
 
     requirejs([
       'legion',
+      'tests/legion',
       'tests/class',
       'tests/entity',
       'tests/environment',
       'tests/graphics',
-      'tests/timer'
+      'tests/timer',
+      'tests/util',
+      'tests/game',
+      'tests/input'
     ], function() {
-       mocha.run();
+      if (window.mochaPhantomJS) {
+        mochaPhantomJS.run(); 
+      } else {
+        mocha.run();
+      }
+      
     });
     
   </script>
