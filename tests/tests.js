@@ -11,12 +11,12 @@ define.config({
 });
 
 
-require('./class');
-require('./entity');
-require('./environment');
-require('./graphics');
-require('./timer');
-require('./util')
+require('./tests/class');
+require('./tests/entity');
+require('./tests/environment');
+require('./tests/graphics');
+require('./tests/timer');
+require('./tests/util')
 
 //Make sure all src files are included so that coverage will take into account untested files.
 file = require('file');
