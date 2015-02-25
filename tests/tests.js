@@ -16,7 +16,8 @@ require('./tests/entity');
 require('./tests/environment');
 require('./tests/graphics');
 require('./tests/timer');
-require('./tests/util')
+require('./tests/util');
+require('./tests/game');
 
 //Make sure all src files are included so that coverage will take into account untested files.
 file = require('file');
