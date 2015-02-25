@@ -14,7 +14,10 @@
         baseUrl: "../",
 
         paths: {
-          'legion': 'src/legion',
+          'legion': [
+            'src_instrumented/legion',
+            'src/legion'
+          ],
           'pixi':  'node_modules/pixi.js/bin/pixi',
           'tests': 'tests'
         }
@@ -33,7 +36,12 @@
       'tests/graphics',
       'tests/timer'
     ], function() {
-       mocha.run();
+      if (window.mochaPhantomJS) {
+        mochaPhantomJS.run(); 
+      } else {
+        mocha.run();
+      }
+      
     });
     
   </script>

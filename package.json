@@ -25,8 +25,7 @@
     "url": "https://github.com/DrkSephy/legionJS/issues"
   },
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha tests/tests.js",
-    "pretest": "node ./node_modules/jshint/bin/jshint src/ && node ./node_modules/jscs/bin/jscs src/"
+    "test": "sh testsuite.sh"
   },
   "keywords": [
     "JavaScript",
@@ -40,8 +39,12 @@
   },
   "devDependencies": {
     "chai": "^1.10.0",
+    "istanbul": "^0.3.6",
     "jscs": "^1.11.3",
     "jshint": "^2.6.0",
-    "mocha": "^2.1.0"
+    "mocha": "^2.1.0",
+    "mocha-phantomjs": "^3.5.3",
+    "mocha-phantomjs-istanbul": "0.0.2",
+    "phantomjs": "^1.9.15"
   }
 }
