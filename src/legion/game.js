@@ -83,6 +83,11 @@ define(['legion/class', 'legion/timer', 'legion/event'],
       for (var i = 0; i < this._timers.length; i++) {
         this._timers[i].tick(delta);
       }
+    },
+
+    setEnvironment: function(environment) {
+      this.environment = environment;
+      this.environment._bindGame(this);
     }
   });
 

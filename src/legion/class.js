@@ -145,6 +145,10 @@ define(['legion/strings'], function(strings) {
 
   // Return the base instance of Class
   return _extendSingle.call(function() {}, {
+
+    // Game associated with this object.
+    game: null,
+
     /*
       init() takes an object of properties and adds them to the Class.
 
@@ -177,6 +181,17 @@ define(['legion/strings'], function(strings) {
         }
       }
       return this;
+    },
+
+
+    /*
+      _bindGame() binds the game object to the class when it is added to the
+      game so that the entity knows which game it is in.
+
+      @param {object} game
+    */
+    _bindGame: function(game) {
+      this.game = game;
     }
 
   });

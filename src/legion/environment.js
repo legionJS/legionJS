@@ -30,6 +30,7 @@ define(['legion/class'], function(Class) {
     */
     addEntity: function(entity) {
       this.entities.push(entity);
+      entity._bindGame(this.game);
     },
 
     /*
@@ -39,6 +40,18 @@ define(['legion/class'], function(Class) {
     _update: function() {
       for (var i = 0; i < this.entities.length; i++) {
         this.entities[i]._update();
+      }
+    },
+
+    /*
+      _bindGame(game) overrides the default _bindGame to also bind all
+      entities in the environment to the game.
+    */
+    _bindGame: function(game) {
+      this.parent(game);
+
+      for (var i = 0; i < this.entities.length; i++) {
+        this.entities[i]._bindGame(game);
       }
     }
   });
