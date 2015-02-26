@@ -1,7 +1,7 @@
 'use strict';
 
-define(['legion/class', 'legion/timer', 'legion/event'],
-  function(Class, Timer, Event) {
+define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
+  function(Class, Timer, Event, Input) {
   var Game = Class.extend({
 
     // The target FPS
@@ -27,6 +27,13 @@ define(['legion/class', 'legion/timer', 'legion/event'],
       this.spf = 1000 / this.fps;
       this.event = new Event();
       this._timers = [];
+
+      // On client-side bind the global Input object to this game
+      // On server it will be bound individually to each connection's
+      // input object.
+      if (!legion.isNode) {
+        Input._bindGame(this);
+      }
     },
 
 
