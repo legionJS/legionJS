@@ -1,6 +1,7 @@
 'use strict';
 
-define(['legion/class', 'legion/timer'], function(Class, Timer) {
+define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
+  function(Class, Timer, Event, Input) {
   var Game = Class.extend({
 
     // The target FPS
@@ -13,7 +14,7 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
     paused: false,
 
     // The list of timers in the game
-    _timers: [],
+    _timers: null,
 
     /*
       init({fps: 60})
@@ -24,6 +25,15 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
       this.parent(properties);
       this.clock = (new Date()).getTime();
       this.spf = 1000 / this.fps;
+      this.event = new Event();
+      this._timers = [];
+
+      // On client-side bind the global Input object to this game
+      // On server it will be bound individually to each connection's
+      // input object.
+      if (!legion.isNode) {
+        Input._bindGame(this);
+      }
     },
 
 
@@ -42,6 +52,8 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
       }
 
       this._update();
+
+      this.event._resolveEventQueue();
     },
 
 
@@ -78,6 +90,11 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
       for (var i = 0; i < this._timers.length; i++) {
         this._timers[i].tick(delta);
       }
+    },
+
+    setEnvironment: function(environment) {
+      this.environment = environment;
+      this.environment._bindGame(this);
     }
   });
 

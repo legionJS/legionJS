@@ -10,19 +10,16 @@
 
   //Keyboard
   //Check key state in game loop
-  input.down(key) //True in the first frame after a key is pressed down
-  input.up(key) //True in the first frame after a key is released
   input.state(key) //True is down, false if up.
 
   //Bind events
-  input.onPress(function) //call when this key is pressed (up/down)
   input.onDown(function) //Call when the key is pressed down
   input.onUp(function) //call when key is released
 */
 
 define(['legion/class', 'legion/util'], function(Class, util) {
   var Input = Class.extend({
-    _state: {},
+    _state: null,
 
     keys: {
       LEFT: 37,
@@ -31,8 +28,21 @@ define(['legion/class', 'legion/util'], function(Class, util) {
       DOWN: 40
     },
 
+    init: function(properties) {
+      this._state = {};
+      this.parent(properties);
+    },
+
     state: function(keyCode) {
       return !!this._state[keyCode]; // !! to handle undefined
+    },
+
+    onDown: function(keyCode, callback) {
+      this.game.event.on('keyDown_' + keyCode, callback);
+    },
+
+    onUp: function(keyCode, callback) {
+      this.game.event.on('keyUp_' + keyCode, callback);
     }
   });
 
@@ -42,12 +52,15 @@ define(['legion/class', 'legion/util'], function(Class, util) {
     return new (Input.extend({
       init: function(properties) {
         this.parent(properties);
+
         global.onkeydown = util.hitch(this, function(e) {
           this._state[e.keyCode] = true;
+          this.game.event.trigger('keyDown_' + e.keyCode);
         });
 
         global.onkeyup = util.hitch(this, function(e) {
           this._state[e.keyCode] = false;
+          this.game.event.trigger('keyUp_' + e.keyCode);
         });
       }
     }))();

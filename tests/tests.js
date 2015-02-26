@@ -19,6 +19,7 @@ require('./tests/timer');
 require('./tests/util');
 require('./tests/game');
 require('./tests/input');
+require('./tests/event');
 
 //Make sure all src files are included so that coverage will take into account untested files.
 file = require('file');
