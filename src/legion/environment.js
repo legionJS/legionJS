@@ -10,7 +10,7 @@ define(['legion/class'], function(Class) {
     height: 0,
 
     // Array of entities in the environment, default []
-    entities: [],
+    entities: null,
 
     /*
       init()
@@ -19,7 +19,7 @@ define(['legion/class'], function(Class) {
     */
     init: function(properties) {
       properties = typeof properties !== 'undefined' ? properties : {};
-
+      this.entities = [];
       this.parent(properties);
     },
 

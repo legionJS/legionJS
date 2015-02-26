@@ -1,6 +1,7 @@
 'use strict';
 
-define(['legion/class', 'legion/timer'], function(Class, Timer) {
+define(['legion/class', 'legion/timer', 'legion/event'],
+  function(Class, Timer, Event) {
   var Game = Class.extend({
 
     // The target FPS
@@ -13,7 +14,7 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
     paused: false,
 
     // The list of timers in the game
-    _timers: [],
+    _timers: null,
 
     /*
       init({fps: 60})
@@ -24,6 +25,8 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
       this.parent(properties);
       this.clock = (new Date()).getTime();
       this.spf = 1000 / this.fps;
+      this.event = new Event();
+      this._timers = [];
     },
 
 
@@ -42,6 +45,8 @@ define(['legion/class', 'legion/timer'], function(Class, Timer) {
       }
 
       this._update();
+
+      this.event._resolveEventQueue();
     },
 
 

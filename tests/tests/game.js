@@ -7,8 +7,8 @@ define([
     it('Create and Loop Game', function(done) {
       var g = new (Game.extend({
         loop: function() {
-          this.parent();
           this.paused = true;
+          this.parent();
           done();
           done = null;
         }

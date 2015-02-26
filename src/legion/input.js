@@ -22,13 +22,18 @@
 
 define(['legion/class', 'legion/util'], function(Class, util) {
   var Input = Class.extend({
-    _state: {},
+    _state: null,
 
     keys: {
       LEFT: 37,
       UP: 38,
       RIGHT: 39,
       DOWN: 40
+    },
+
+    init: function(properties) {
+      this._state = {};
+      this.parent(properties);
     },
 
     state: function(keyCode) {
