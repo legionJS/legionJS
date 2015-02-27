@@ -46,7 +46,7 @@
       // To the game.
       var game = new Game();
       var env = new Environment({backgroundColor: 0x66FF99});
-      game.environment = env;
+      game.setEnvironment(env);
 
 
       /* Raw PIXI Display Object */
@@ -60,19 +60,14 @@
       // Create an entity with the displayObject
       var ent = new (Entity.implement([DisplayObject, {
         _update: function() {
+          var speed = 200;
+          this.setVelocity(
+            speed * ( Input.state(Input.keys.LEFT) ? -1 : 
+                      Input.state(Input.keys.RIGHT) ? 1 : 0),
+            speed * ( Input.state(Input.keys.UP) ? -1 : 
+                      Input.state(Input.keys.DOWN) ? 1 : 0)
+          );
           this.parent();
-          if (Input.state(Input.keys.UP)) {
-            this.y -= 1;
-          }
-          if (Input.state(Input.keys.DOWN)) {
-            this.y += 1;
-          }
-          if (Input.state(Input.keys.LEFT)) {
-            this.x -= 1;
-          }
-          if (Input.state(Input.keys.RIGHT)) {
-            this.x += 1;
-          }
         }
       }]))({
         displayObject: bunny, x: 200, y: 150
@@ -84,28 +79,44 @@
 
       /* Basic Shapes */
 
+      var CustomEnt = Entity.implement([DisplayObject, Shape])
+        .extend({
+          _update: function() {
+            this.parent();
+
+            //Loop the entities
+            if (this.x > 500) {
+              this.x = -100;
+            }
+
+            if (this.y > 500) {
+              this.y = -100;
+            }
+          }
+        });
+
       // Create an entity that implements Shape and create
       // a rectangle instance.
-      var ent2 = new (Entity.implement([DisplayObject, Shape]))({
-        w: 50, h: 50, x: 300, y:300,
+      var ent2 = new CustomEnt({
+        w: 50, h: 50, x: 300, y:300, vx: 200,
         color: 0xFFFF00, shape: 'rect'
       });
       env.addEntity(ent2);
 
-      var ent3 = new (Entity.implement([DisplayObject, Shape]))({
-        x: 250, y:250, r: 30,
+      var ent3 = new CustomEnt({
+        x: 250, y:250, r: 30, vx: 200, vy: 200,
         color: 0x0000FF, shape: 'circle'
       });
       env.addEntity(ent3);
 
 
       /* Movement to make things exciting! */
-      setInterval(function() {
+      /*setInterval(function() {
         //ent.y = (ent.y + 1) % 500;
         ent2.x = (ent2.x +3) % 500;
 
         ent3.x = ent3.y = (ent3.x + 2) % 500;
-      }, 4);
+      }, 4);*/
 
 
 

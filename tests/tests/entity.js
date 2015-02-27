@@ -43,5 +43,17 @@ define([
 
       chai.assert.equal(a.a(), 'b');
     });
+
+    it('Set Velocity', function() {
+      var a = new Entity();
+
+      a.setVelocity(10, 20);
+      chai.assert.equal(a.vx, 10);
+      chai.assert.equal(a.vy, 20);
+
+      a.setVelocity([100, 200]);
+      chai.assert.equal(a.vx, 100);
+      chai.assert.equal(a.vy, 200);
+    });
   });
 });

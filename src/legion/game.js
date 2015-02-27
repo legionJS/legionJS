@@ -45,11 +45,11 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
     */
     loop: function() {
       var newClock = (new Date()).getTime();
-      var delta = newClock - this.clock;
+      this.delta = newClock - this.clock;
       this.clock = newClock;
-      this._updateTimers(delta);
+      this._updateTimers(this.delta);
       if (!this.paused) {
-        var t = Math.round(2 * this.spf - delta - 1);
+        var t = Math.round(2 * this.spf - this.delta - 1);
         t = t > 4 ? t : 4;
         this._loopTimeout = setTimeout(this.loop.bind(this), t);
       }

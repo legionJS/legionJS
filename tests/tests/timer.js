@@ -21,7 +21,7 @@ define([
       g.loop();
       setTimeout(function() {
         g.paused = true;
-        chai.assert.equal(t.triggered(), 4);
+        chai.assert(t.triggered() >= 4);
         done();
       }, 120);
     });
