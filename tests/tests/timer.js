@@ -23,7 +23,7 @@ define([
         g.paused = true;
         chai.assert.equal(t.triggered(), 4);
         done();
-      }, 110);
+      }, 120);
     });
 
     it('Looping Timer + Constant Checking', function(done) {
@@ -32,13 +32,13 @@ define([
       g.loop();
       var count = 0;
       var i = setInterval(function() {
-        chai.assert.equal(t.triggered(), 1);
+        chai.assert(t.triggered() >= 1);
         if (++count === 2) {
           clearInterval(i);
           g.paused = true;
           done();
         }
-      }, 60);
+      }, 75);
     });
 
     it('Reset Timer', function(done) {
@@ -52,7 +52,7 @@ define([
         t.reset();
         chai.assert(t._elapsed == 0);
         done();
-      }, 125);
+      }, 150);
     });
 
   });
