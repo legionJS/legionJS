@@ -8,7 +8,10 @@ define([
   describe('Graphics', function() {
     it('DisplayObject', function() {
       var RawDisplayEntity = Entity.implement(DisplayObject);
-      var ent = new RawDisplayEntity({x: 150, y: 150, displayObject: {x: 0, y:0}});
+      var ent = new RawDisplayEntity({
+        x: 150, y: 150, displayObject: {x: 0, y:0},
+        game: {delta: 1}
+      });
       ent._update();
 
       if (!legion.isNode) {
@@ -22,7 +25,8 @@ define([
 
       var square = new ShapeEntity({
         w: 50, h: 50, x: 300, y:300,
-        color: 0xFFFF00, shape: 'rect'
+        color: 0xFFFF00, shape: 'rect',
+        game: {delta: 1}
       });
 
       square._update();
@@ -39,7 +43,8 @@ define([
 
       var circle = new ShapeEntity({
         x: 300, y:300, r: 50,
-        color: 0xFFFF00, shape: 'circle'
+        color: 0xFFFF00, shape: 'circle',
+        game: {delta: 1}
       });
 
       circle._update();

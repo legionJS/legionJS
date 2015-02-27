@@ -27,3 +27,7 @@ For consistent coding style, this project will adhere to the [Airbnb JavaScript 
 # Useful Links
 
 [Build a 2D game physics engine](http://www.ibm.com/developerworks/library/wa-build2dphysicsengine/)
+
+[Fast-Paced Multiplayer](http://www.gabrielgambetta.com/fast_paced_multiplayer.html)
+
+[Game Physics](http://gafferongames.com/game-physics/)

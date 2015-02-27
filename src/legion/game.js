@@ -16,6 +16,9 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
     // The list of timers in the game
     _timers: null,
 
+    // frame times
+    _frameTimes: null,
+
     /*
       init({fps: 60})
 
@@ -27,7 +30,7 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
       this.spf = 1000 / this.fps;
       this.event = new Event();
       this._timers = [];
-
+      this._frameTimes = [];
       // On client-side bind the global Input object to this game
       // On server it will be bound individually to each connection's
       // input object.
@@ -42,11 +45,11 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
     */
     loop: function() {
       var newClock = (new Date()).getTime();
-      var delta = newClock - this.clock;
+      this.delta = newClock - this.clock;
       this.clock = newClock;
-      this._updateTimers(delta);
+      this._updateTimers(this.delta);
       if (!this.paused) {
-        var t = Math.floor(this.spf - delta);
+        var t = Math.round(2 * this.spf - this.delta - 1);
         t = t > 4 ? t : 4;
         this._loopTimeout = setTimeout(this.loop.bind(this), t);
       }
@@ -54,6 +57,19 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
       this._update();
 
       this.event._resolveEventQueue();
+
+      if (legion.debug) {
+        this._measureFPS(newClock);
+      }
+    },
+
+    _measureFPS: function(newTime) {
+      if (this._frameTimes.length >= this.fps) {
+        this._frameTimes.shift();
+      }
+      this._frameTimes.push(newTime);
+      this.actualFps = 1000 * this._frameTimes.length /
+        (this._frameTimes[this._frameTimes.length - 1] - this._frameTimes[0]);
     },
 
 
