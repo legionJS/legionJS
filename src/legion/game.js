@@ -37,6 +37,20 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
       if (!legion.isNode) {
         Input._bindGame(this);
       }
+
+      if (legion.isNode) {
+        this.initServer();
+      } else {
+        this.initClient();
+      }
+    },
+
+    initClient: function() {
+
+    },
+
+    initServer: function() {
+
     },
 
 

@@ -1,58 +1,21 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <title>pixi.js example 1</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #000000;
-    }
-  </style>
-  <script src="../node_modules/requirejs/require.js"></script>
-
-</head>
-<body>
-  <script>
-
-  requirejs.config({
-        baseUrl: "../",
-
-        paths: {
-          'legion': 'src/legion',
-          'pixi':  'node_modules/pixi.js/bin/pixi'
-        },
-
-        shim: {
-          'pixi': {
-            exports: 'PIXI'
-          }
-        }
-    });
-  
-  requirejs([
-      'legion',
-      'legion/environment',
-      'legion/game',
-      'legion/entity',
-      'legion/graphics/displayobject',
-      'legion/graphics/shape',
-      'legion/input'
-    ], function(legion, Environment, Game, Entity, DisplayObject, Shape, Input) {
-      // Create canvas and set it to 500x500
-      legion.init(500, 500); 
-      
-      // Create a new game and environment, and assign the environment
-      // To the game.
-      var game = new Game();
+define([
+  'legion/environment',
+  'legion/game',
+  'legion/entity',
+  'legion/graphics/displayobject',
+  'legion/graphics/shape',
+  'legion/input'
+], function(Environment, Game, Entity, DisplayObject, Shape, Input) {
+  return Game.extend({
+    initClient: function() {
       var env = new Environment({backgroundColor: 0x66FF99});
-      game.setEnvironment(env);
+      this.setEnvironment(env);
 
 
       /* Raw PIXI Display Object */
 
       // Create a raw PIXI display object
-      var texture = PIXI.Texture.fromImage("bunny.png");
+      var texture = PIXI.Texture.fromImage("game/bunny.png");
       var bunny = new PIXI.Sprite(texture);
       bunny.anchor.x = 0.5;
       bunny.anchor.y = 0.5;
@@ -108,24 +71,6 @@
         color: 0x0000FF, shape: 'circle'
       });
       env.addEntity(ent3);
-
-
-      /* Movement to make things exciting! */
-      /*setInterval(function() {
-        //ent.y = (ent.y + 1) % 500;
-        ent2.x = (ent2.x +3) % 500;
-
-        ent3.x = ent3.y = (ent3.x + 2) % 500;
-      }, 4);*/
-
-
-
-
-      // Start Game
-      game.loop();
-    });
-
-  </script>
-
-  </body>
-</html>
+    }
+  })
+});
