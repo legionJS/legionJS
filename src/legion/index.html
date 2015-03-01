@@ -1,0 +1,21 @@
+<script src="/node_modules/requirejs/require.js"></script>
+<script>
+	requirejs.config({
+        baseUrl: "/",
+
+        paths: {
+          'legion': 'src/legion',
+          'pixi':  'node_modules/pixi.js/bin/pixi',
+          'game': '{{game_directory}}'
+        }
+    });
+
+	requirejs([
+      'legion',
+      'game/{{game}}'
+  	], function(legion, Game) {
+  		legion.init({{w}}, {{h}});
+  		var game = new Game();
+  		game.loop();
+  	});
+</script>
