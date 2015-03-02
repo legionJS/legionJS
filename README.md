@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/DrkSephy/legionJS.svg?branch=master)](https://travis-ci.org/DrkSephy/legionJS)
 
 # legionJS
 
