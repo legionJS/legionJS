@@ -25,6 +25,8 @@ require('./tests/event');
 file = require('file');
 file.walk('src', function(_, dirPath, dirs, files) {
   for (var i = 0; i < files.length; i++) {
-    require('../' + files[i].split('.js')[0]);
+    if (files[i].indexOf('.js') >= 0) {
+      require('../' + files[i].split('.js')[0]);
+    }
   }
 });
