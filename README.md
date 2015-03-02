@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/DrkSephy/legionJS.svg?branch=master)](https://travis-ci.org/DrkSephy/legionJS)
+
 # legionJS
 
 JavaScript 2D Game Engine with Multiplayer support.
