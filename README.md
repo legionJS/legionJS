@@ -18,6 +18,8 @@ Run tests with:
 
 	npm test
 
+`npm test` will also run static analysis and generate a coverage report.
+
 
 # Contributing
 
