@@ -1,21 +1,45 @@
 <script src="/node_modules/requirejs/require.js"></script>
 <script>
-	requirejs.config({
-        baseUrl: "/",
+  requirejs.config({
+    baseUrl: "/",
 
-        paths: {
-          'legion': 'src/legion',
-          'pixi':  'node_modules/pixi.js/bin/pixi',
-          'game': '{{game_directory}}'
-        }
+    paths: {
+      'legion': 'src/legion',
+      'pixi':  'node_modules/pixi.js/bin/pixi',
+      'socketio': '/socket.io/socket.io',
+      'game': '{{game_directory}}'
+    },
+
+    shim: {
+      'socketio': {
+        exports: 'io'
+      }
+    }
+  });
+
+  if ({{multiplayer}}) {
+    requirejs([
+      'legion',
+      'socketio',
+      'game/{{game}}'
+    ], function(legion, io, Game) {
+      legion.init({{w}}, {{h}});
+      var game = new Game({
+        multiplayer: {{multiplayer}},
+        socket: io()
+      });
+      game.loop();
     });
-
-	requirejs([
+  } else {
+    requirejs([
       'legion',
       'game/{{game}}'
-  	], function(legion, Game) {
-  		legion.init({{w}}, {{h}});
-  		var game = new Game();
-  		game.loop();
-  	});
+    ], function(legion, Game) {
+      legion.init({{w}}, {{h}});
+      var game = new Game({
+        multiplayer: {{multiplayer}}
+      });
+      game.loop();
+    });
+  }
 </script>
