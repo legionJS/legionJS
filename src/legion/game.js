@@ -19,6 +19,9 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
     // frame times
     _frameTimes: null,
 
+    // Whether it's a multiplayer game
+    multiplayer: false,
+
     /*
       init({fps: 60})
 
@@ -38,7 +41,7 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
         Input._bindGame(this);
       }
 
-      if (legion.isNode) {
+      if (legion.isNode && this.multiplayer) {
         this.initServer();
       } else {
         this.initClient();
@@ -46,13 +49,21 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
     },
 
     initClient: function() {
-
+      if (this.multiplayer) {
+        this.socket.on('connect', function() {
+          console.log('connected');
+        });
+      }
     },
 
     initServer: function() {
-
+      this.io.on('connection', this.onConnection);
     },
 
+    onConnection: function(socket) {
+      console.log('player connected!');
+      socket.emit('connect');
+    },
 
     /*
       loop() is the main game loop.

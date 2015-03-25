@@ -7,6 +7,7 @@ define(['legion/class', 'legion/util'], function(Class, Util) {
     port: 1337,
     w: 500,
     h: 500,
+    multiplayer: false,
 
     init: function(properties) {
       this.parent(properties);
@@ -32,17 +33,26 @@ define(['legion/class', 'legion/util'], function(Class, Util) {
       app.get('/', Util.hitch(this, function(req, res) {
         res.header('Content-Type', 'text/html');
         var data = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-        console.log(typeof data);
         res.send(mustache.render(data, {
           game: this.game,
           w: this.w,
-          h: this.h
+          h: this.h,
+          multiplayer: this.multiplayer
         }));
       }));
 
       http.listen(this.port, function() {
         console.log('Legion!');
       });
+
+      if (this.multiplayer) {
+        var Game = require(path.join(this.gameDir, this.game));
+        var game = new Game({
+          io: require('socket.io')(http),
+          multiplayer: this.multiplayer
+        });
+        game.loop();
+      }
     }
   });
 });

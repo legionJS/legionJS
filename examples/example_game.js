@@ -8,6 +8,7 @@ define([
 ], function(Environment, Game, Entity, DisplayObject, Shape, Input) {
   return Game.extend({
     initClient: function() {
+      this.parent(arguments);
       var env = new Environment({backgroundColor: 0x66FF99});
       this.setEnvironment(env);
 

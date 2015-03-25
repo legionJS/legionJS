@@ -18,7 +18,8 @@ define(['legion', 'legion/server'], function(legion, Server) {
     gameDir: __dirname,
     port: 1337,
     w: 500,
-    h: 500
+    h: 500,
+    multiplayer: true
   });
   server.run();
 });
