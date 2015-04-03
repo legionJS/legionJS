@@ -1,7 +1,9 @@
 'use strict';
 
-define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
-  function(Class, Timer, Event, Input) {
+define([
+    'legion/class', 'legion/timer', 'legion/event',
+    'legion/input', 'legion/util'
+], function(Class, Timer, Event, Input, Util) {
   var Game = Class.extend({
 
     // The target FPS
@@ -21,6 +23,9 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
 
     // Whether it's a multiplayer game
     multiplayer: false,
+
+    // Current environment for the game
+    environment: null,
 
     /*
       init({fps: 60})
@@ -50,19 +55,28 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
 
     initClient: function() {
       if (this.multiplayer) {
-        this.socket.on('connect', function() {
-          console.log('connected');
-        });
+        this.socket.on('connect', Util.hitch(this, this.onConnectionClient));
       }
     },
 
     initServer: function() {
-      this.io.on('connection', this.onConnection);
+      this.io.on('connection', Util.hitch(this, this.onConnectionServer));
     },
 
-    onConnection: function(socket) {
+    /*
+      Called on the server-side when a client connects.
+    */
+    onConnectionServer: function(socket) {
       console.log('player connected!');
       socket.emit('connect');
+    },
+
+    /*
+      Called on the client-side when the server responds to the client's
+      connection.  Triggered by having the server's socket emit 'connect'.
+    */
+    onConnectionClient: function() {
+      console.log('connected to server');
     },
 
     /*
