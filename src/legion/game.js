@@ -24,8 +24,17 @@ define([
     // Whether it's a multiplayer game
     multiplayer: false,
 
+    // Available server-side in multiplayer games
+    io: null,
+
+    // Available client-side in multiplayer games
+    socket: null,
+
     // Current environment for the game
     environment: null,
+
+    // A sequential object ID to uniquely identify all objects.
+    objectID: 0,
 
     /*
       init({fps: 60})
@@ -56,6 +65,10 @@ define([
     initClient: function() {
       if (this.multiplayer) {
         this.socket.on('connect', Util.hitch(this, this.onConnectionClient));
+        this.socket.on('sync', Util.hitch(this, function(syncObject) {
+          this.event.trigger('sync', [syncObject]);
+        }));
+        this.event.on('sync', Util.hitch(this, this.syncClient));
       }
     },
 
@@ -79,6 +92,13 @@ define([
       console.log('connected to server');
     },
 
+    syncClient: function() {
+    },
+
+    syncServer: function() {
+      this.io.emit('sync', {clock: this.clock});
+    },
+
     /*
       loop() is the main game loop.
     */
@@ -94,6 +114,10 @@ define([
       }
 
       this._update();
+
+      if (legion.isNode && this.multiplayer) {
+        this.syncServer();
+      }
 
       this.event._resolveEventQueue();
 
@@ -150,6 +174,10 @@ define([
     setEnvironment: function(environment) {
       this.environment = environment;
       this.environment._bindGame(this);
+    },
+
+    _getObjectID: function() {
+      return this.objectID++;
     }
   });
 
