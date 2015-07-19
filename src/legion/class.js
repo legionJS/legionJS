@@ -149,6 +149,9 @@ define(['legion/strings'], function(strings) {
     // Game associated with this object.
     game: null,
 
+    // ID of the object.  Will be assigned when it's bound to a game.
+    id: null,
+
     /*
       init() takes an object of properties and adds them to the Class.
 
@@ -192,6 +195,9 @@ define(['legion/strings'], function(strings) {
     */
     _bindGame: function(game) {
       this.game = game;
+      if (game) {
+        this.id = game._getObjectID();
+      }
     }
 
   });

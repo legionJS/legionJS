@@ -62,7 +62,7 @@ define([
     it('Update Environment', function() {
       var e = new Environment({
         width: 100, height: 100,
-        game: {delta: 1}
+        game: {delta: 1, _getObjectID: function(){}}
       });
       var ent = new (Entity.implement([DisplayObject, Shape]))({
         w: 50, h: 50, x: 300, y:300,
