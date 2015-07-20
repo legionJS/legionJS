@@ -24,9 +24,9 @@ define(['legion/class'], function(Class) {
       trigger(event) triggers an event and adds all the callbacks to a queue
       to be processed at the end of the current frame.
     */
-    trigger: function(event) {
+    trigger: function(event, parameters) {
       this._initializeEvent(event);
-      this._queue = this._queue.concat(this._events[event]);
+      this._queue.push([this._events[event], parameters]);
     },
 
     /*
@@ -38,7 +38,11 @@ define(['legion/class'], function(Class) {
       var tempQueue = this._queue;
       this._queue = [];
       while (tempQueue.length > 0) {
-        tempQueue.pop()();
+        var event = tempQueue.pop();
+        for (var i = 0; i < event[0].length; i++) {
+          //event[0][i].apply(null, event[1]);
+          event[0][i].apply(null, event[1]);
+        }
       }
     },
 
