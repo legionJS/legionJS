@@ -24,6 +24,12 @@ define([
     // Whether it's a multiplayer game
     multiplayer: false,
 
+    //Number of milliseconds between syncing
+    msPerSync: 50,
+
+    //Timer for syncing
+    syncTimer: null,
+
     // Available server-side in multiplayer games
     io: null,
 
@@ -35,6 +41,9 @@ define([
 
     // A sequential object ID to uniquely identify all objects.
     objectID: 0,
+
+    // On the client-side this is the ID of the client.
+    clientID: null,
 
     /*
       init({fps: 60})
@@ -51,6 +60,11 @@ define([
       // On client-side bind the global Input object to this game
       // On server it will be bound individually to each connection's
       // input object.
+
+      if (this.multiplayer) {
+        this.syncTimer = this.createTimer({target: this.msPerSync, loop:true});
+      }
+
       if (!legion.isNode) {
         Input._bindGame(this);
       }
@@ -64,9 +78,10 @@ define([
 
     initClient: function() {
       if (this.multiplayer) {
-        this.socket.on('connect', Util.hitch(this, this.onConnectionClient));
-        this.socket.on('sync', Util.hitch(this, function(syncObject) {
-          this.event.trigger('sync', [syncObject]);
+        this.socket.on('connection', Util.hitch(this, this.onConnectionClient));
+
+        this.socket.on('sync', Util.hitch(this, function(message) {
+          this.event.trigger('sync', [message]);
         }));
         this.event.on('sync', Util.hitch(this, this.syncClient));
       }
@@ -74,6 +89,11 @@ define([
 
     initServer: function() {
       this.io.on('connection', Util.hitch(this, this.onConnectionServer));
+
+      /*this.socket.on('sync', Util.hitch(this, function(message) {
+        this.event.trigger('sync', [message]);
+      }));*/
+      this.event.on('sync', Util.hitch(this, this.syncServer));
     },
 
     /*
@@ -81,22 +101,69 @@ define([
     */
     onConnectionServer: function(socket) {
       console.log('player connected!');
-      socket.emit('connect');
+      console.log(this.connectionMessage(socket));
+      //console.log(JSON.stringify(this.connectionMessage(socket)));
+      socket.emit('connection', this.connectionMessage(socket));
+      /*socket.on('sync', function(o) {
+        console.log(o[0].x);
+      });*/
+      //socket.on('sync', Util.hitch(this, this.syncServer));
+      socket.on('sync', Util.hitch(this, function(message) {
+        this.event.trigger('sync', [message]);
+      }));
+    },
+
+    /*
+      connectionMessage() generates the message that will be sent to the
+      client when it connects to the server.  It is in the form of a object.
+
+      Default is just the client ID:
+
+      {clientID:id}
+
+      @param socket
+      @return {object}
+    */
+    connectionMessage: function(socket) {
+      return {clientID: socket.id};
     },
 
     /*
       Called on the client-side when the server responds to the client's
       connection.  Triggered by having the server's socket emit 'connect'.
     */
-    onConnectionClient: function() {
+    onConnectionClient: function(message) {
+      this.clientID = message.clientID;
       console.log('connected to server');
     },
 
-    syncClient: function() {
+    syncClient: function(message) {
+      //console.log(message);
+      this.environment._sync(message);
     },
 
-    syncServer: function() {
+    syncServer: function(message) {
+      //console.log(message[0].x)
+      this.environment._sync(message);
+    },
+
+    /*syncServer: function() {
       this.io.emit('sync', {clock: this.clock});
+    },*/
+
+    sendServerStateToClient: function() {
+      var message = this.environment._getSyncMessage();
+      this.io.emit('sync', message);
+    },
+
+    /*
+      Serialize any entites with syncDirection=='up' in the environment
+      and send them to the server.
+    */
+    sendClientStateToServer: function() {
+      var message = this.environment._getSyncMessage();
+      //console.log(message);
+      this.socket.emit('sync', message);
     },
 
     /*
@@ -115,8 +182,12 @@ define([
 
       this._update();
 
-      if (legion.isNode && this.multiplayer) {
-        this.syncServer();
+      if (this.syncTimer.triggered()) {
+        if (legion.isNode && this.multiplayer) {
+          this.sendServerStateToClient();
+        } else {
+          this.sendClientStateToServer();
+        }
       }
 
       this.event._resolveEventQueue();

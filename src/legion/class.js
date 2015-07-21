@@ -139,6 +139,11 @@ define(['legion/strings'], function(strings) {
         }
       }
 
+      //Register the class with legion
+      //console.log(Class.prototype.className);
+      //console.log(legion)
+      legion.classes[Class.prototype.className] = Class;
+
       return Class;
     };
   })();
@@ -146,11 +151,17 @@ define(['legion/strings'], function(strings) {
   // Return the base instance of Class
   return _extendSingle.call(function() {}, {
 
+    className: 'Class',
+
     // Game associated with this object.
     game: null,
 
     // ID of the object.  Will be assigned when it's bound to a game.
     id: null,
+
+    // The ID of the client that "owns" this entity.  null means the serveer
+    // owns it.
+    clientID: null,
 
     /*
       init() takes an object of properties and adds them to the Class.
@@ -186,7 +197,6 @@ define(['legion/strings'], function(strings) {
       return this;
     },
 
-
     /*
       _bindGame() binds the game object to the class when it is added to the
       game so that the entity knows which game it is in.
@@ -196,8 +206,27 @@ define(['legion/strings'], function(strings) {
     _bindGame: function(game) {
       this.game = game;
       if (game) {
-        this.id = game._getObjectID();
+        if (this.id === null) {
+          this.id = game._getObjectID();
+        }
+        if (this.clientID === null) {
+          this.clientID = game.clientID;
+        }
       }
+    },
+
+    /*
+      serialize() returns a serializable object of the format:
+
+      {
+        id: id,
+        clientID: id
+      }
+
+      @return {object}
+    */
+    serialize: function() {
+      return {id: this.id, clientID: this.clientID, className: this.className};
     }
 
   });

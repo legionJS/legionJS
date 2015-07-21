@@ -7,23 +7,30 @@ define([
 
     speed: 200,
     x: 200, y: 200,
+    className: 'Bunny',
 
     init: function(properties) {
-      var texture = PIXI.Texture.fromImage("game/bunny.png");
-      var bunny = new PIXI.Sprite(texture);
-      bunny.anchor.x = 0.5;
-      bunny.anchor.y = 0.5;
+      this.parent(properties);
+      if (!legion.isNode) {
+        var texture = PIXI.Texture.fromImage("game/bunny.png");
+        var bunny = new PIXI.Sprite(texture);
+        bunny.anchor.x = 0.5;
+        bunny.anchor.y = 0.5;
 
-      this.displayObject = bunny;
+        this.displayObject = bunny;
+      }
     },
 
     _update: function() {
-      this.setVelocity(
-        this.speed * ( Input.state(Input.keys.LEFT) ? -1 : 
-                  Input.state(Input.keys.RIGHT) ? 1 : 0),
-        this.speed * ( Input.state(Input.keys.UP) ? -1 : 
-                  Input.state(Input.keys.DOWN) ? 1 : 0)
-      );
+      // Make sure that the inputs only effect your own bunny.
+      if (!legion.isNode && this.clientID === this.game.clientID) {
+        this.setVelocity(
+          this.speed * ( Input.state(Input.keys.LEFT) ? -1 :
+                    Input.state(Input.keys.RIGHT) ? 1 : 0),
+          this.speed * ( Input.state(Input.keys.UP) ? -1 :
+                    Input.state(Input.keys.DOWN) ? 1 : 0)
+        );
+      }
       this.parent();
     }
   });

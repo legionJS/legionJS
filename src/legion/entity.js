@@ -6,6 +6,8 @@
 define(['legion/class'], function(Class) {
   return Class.extend({
 
+    className: 'Entity',
+
     // Current x/y pos
     x: 0,
     y: 0,
@@ -17,6 +19,11 @@ define(['legion/class'], function(Class) {
     // Current x/y velocity in pixels/second
     vx: 0,
     vy: 0,
+
+    // Whether this object should be synced from the client to the server
+    // or vice-versa.  Either 'up' or 'down'.  Each object should only be
+    // 'up' on at most a single client.
+    syncDirection: 'down',
 
     /*
       _update() is called once each frame to update the entity.
@@ -34,6 +41,32 @@ define(['legion/class'], function(Class) {
 
       this.vx = vx;
       this.vy = vy;
+    },
+
+    /*
+      serialize() returns a serializable object of the format:
+
+      {
+        id: id,
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+        vx: vx,
+        vy: vy
+      }
+
+      @return {object}
+    */
+    serialize: function() {
+      var obj = this.parent();
+      obj.x = this.x;
+      obj.y = this.y;
+      obj.w = this.w;
+      obj.h = this.h;
+      obj.vx = this.vx;
+      obj.vy = this.vy;
+      return obj;
     }
   });
 });

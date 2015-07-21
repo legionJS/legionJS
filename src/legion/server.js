@@ -2,6 +2,7 @@
 
 define(['legion/class', 'legion/util'], function(Class, Util) {
   return Class.extend({
+    className: 'Server',
     game: null,
     gameDir: null,
     port: 1337,

@@ -17,6 +17,7 @@ if (!isNode) {
 global.legion = {
   isNode: isNode,
   renderer: null,
+  classes: {},
 
   init: function(w, h) {
     if (!isNode) {
@@ -38,10 +39,12 @@ global.legion = {
 // If on node, just return legion, else first include PIXI
 if (isNode) {
   define([], function() {
+    global.legion.syncDirection = 'down';
     return global.legion;
   });
 } else {
   define(['pixi'], function(pixi) {
+    global.legion.syncDirection = 'up';
     global.PIXI = pixi;
 
     return global.legion;
