@@ -5,8 +5,9 @@ define([
   'legion/graphics/displayobject',
   'legion/graphics/shape',
   'legion/input',
+  'legion/util',
   'game/bunny'
-], function(Environment, Game, Entity, DisplayObject, Shape, Input, Bunny) {
+], function(Environment, Game, Entity, DisplayObject, Shape, Input, Util, Bunny) {
   return Game.extend({
     initServer: function() {
       this.parent(arguments);
@@ -52,6 +53,12 @@ define([
         color: 0x0000FF, shape: 'circle'
       });
       env.addEntity(ent3);*/
+      this.event.on('removeEntity', Util.hitch(this, function(id) {
+        this.environment.removeEntity(id);
+      }));
+      this.socket.on('removeEntity', Util.hitch(this, function(id) {
+        this.event.trigger('removeEntity', [id]);
+      }));
     },
 
     /*
@@ -62,6 +69,7 @@ define([
       console.log("connectionMessage", message);
       var bunny = new Bunny({clientID: message.clientID});
       this.environment.addEntity(bunny);
+      socket.bunny = bunny;
 
       message.bunny = bunny.serialize();
       message.bunny.syncDirection = 'up';
@@ -69,11 +77,13 @@ define([
     },
 
     onDisconnect: function(socket) {
-      this.environment.forEachEntity(function(entity) {
+      /*this.environment.forEachEntity(function(entity) {
         if (entity.clientID == socket.id) {
           delete entity;
         }
-      });
+      });*/
+      this.environment.removeEntity(socket.bunny.id);
+      this.io.emit('removeEntity', socket.bunny.id);
     },
 
     /*

@@ -43,6 +43,20 @@ define(['legion/class'], function(Class) {
       this.entities[entity.id] = entity;
     },
 
+    removeEntity: function(entityID) {
+      // If the entity is passed in get its id
+      if (entityID instanceof Class) {
+        entityID = entityID.id;
+      }
+      var entity = this.entities[entityID];
+
+      this.entities[entityID] = undefined;
+
+      return entity;
+    },
+
+
+
     /*
       forEachEntity() calls a function for each entity in the environment.
 
@@ -50,7 +64,7 @@ define(['legion/class'], function(Class) {
     */
     forEachEntity: function(func) {
       for (var id in this.entities) {
-        if (this.entities.hasOwnProperty(id)) {
+        if (this.entities.hasOwnProperty(id) && this.entities[id] !== undefined) {
           func(this.entities[id]);
         }
       }
@@ -154,6 +168,16 @@ define(['legion/class'], function(Class) {
         if ('displayObject' in entity) {
           this.stage.addChild(entity.displayObject);
         }
+      },
+
+      removeEntity: function(entityID) {
+        var entity = this.parent(entityID);
+
+        if ('displayObject' in entity) {
+          this.stage.removeChild(entity.displayObject);
+        }
+
+        return entity;
       },
 
       /*

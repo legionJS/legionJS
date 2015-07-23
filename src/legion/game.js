@@ -112,7 +112,9 @@ define([
         this.event.trigger('sync', [message]);
       }));
 
-      socket.on('disconnect', Util.hitch(this, this.onDisconnect));
+      socket.on('disconnect', Util.hitch(this, function() {
+        this.onDisconnect(socket);
+      }));
     },
 
     /*
