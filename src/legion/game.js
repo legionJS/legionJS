@@ -78,7 +78,7 @@ define([
 
     initClient: function() {
       if (this.multiplayer) {
-        this.socket.on('connection', Util.hitch(this, this.onConnectionClient));
+        this.socket.on('connected', Util.hitch(this, this.onConnectionClient));
 
         this.socket.on('sync', Util.hitch(this, function(message) {
           this.event.trigger('sync', [message]);
@@ -101,9 +101,9 @@ define([
     */
     onConnectionServer: function(socket) {
       console.log('player connected!');
-      console.log(this.connectionMessage(socket));
+      //console.log(this.connectionMessage(socket));
       //console.log(JSON.stringify(this.connectionMessage(socket)));
-      socket.emit('connection', this.connectionMessage(socket));
+      socket.emit('connected', this.connectionMessage(socket));
       /*socket.on('sync', function(o) {
         console.log(o[0].x);
       });*/
@@ -111,6 +111,8 @@ define([
       socket.on('sync', Util.hitch(this, function(message) {
         this.event.trigger('sync', [message]);
       }));
+
+      socket.on('disconnect', Util.hitch(this, this.onDisconnect));
     },
 
     /*
@@ -153,6 +155,11 @@ define([
 
     sendServerStateToClient: function() {
       var message = this.environment._getSyncMessage();
+      //console.log(message);
+      if (message.length > 0) {
+        //console.log("boO!");
+        //process.exit();
+      }
       this.io.emit('sync', message);
     },
 

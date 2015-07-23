@@ -59,7 +59,8 @@ define([
     */
     connectionMessage: function(socket) {
       var message = this.parent(socket);
-      var bunny = new Bunny({clientID: message.id});
+      console.log("connectionMessage", message);
+      var bunny = new Bunny({clientID: message.clientID});
       this.environment.addEntity(bunny);
 
       message.bunny = bunny.serialize();
@@ -67,11 +68,20 @@ define([
       return message;
     },
 
+    onDisconnect: function(socket) {
+      this.environment.forEachEntity(function(entity) {
+        if (entity.clientID == socket.id) {
+          delete entity;
+        }
+      });
+    },
+
     /*
       Add the bunny to the env when the server sends it.
     */
     onConnectionClient: function(message) {
       this.parent(message);
+      this.clientID = message.clientID;
       this.environment.addEntity(new Bunny(message.bunny));
     }
   })

@@ -35,6 +35,9 @@ define(['legion/class'], function(Class) {
       @param {object} entity
     */
     addEntity: function(entity) {
+      console.log("ADD ENTITY********");
+      console.log(entity.serialize());
+      console.log("END ADD ENTITY*******");
       //this.entities.push(entity);
       entity._bindGame(this.game);
       this.entities[entity.id] = entity;
@@ -105,7 +108,10 @@ define(['legion/class'], function(Class) {
           this.addEntity(new legion.classes[entity.className](entity));
           //this.entities.push(entity);
         } else {
-          this.entities[entity.id].mixin(entity);
+          // Don't override local copy with servers if it's the player's entity.
+          if (!this.game.clientID || this.game.clientID != entity.clientID) {
+            this.entities[entity.id].mixin(entity);
+          }
         }
       }
     },
