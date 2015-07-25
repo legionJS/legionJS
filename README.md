@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/DrkSephy/legionJS.svg?branch=master)](https://travis-ci.org/DrkSephy/legionJS)
+
 # legionJS
 
 JavaScript 2D Game Engine with Multiplayer support.
@@ -15,6 +17,8 @@ If you are on a Mac, you may need to run:
 Run tests with:
 
 	npm test
+
+`npm test` will also run static analysis and generate a coverage report.
 
 
 # Contributing

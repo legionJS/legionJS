@@ -1,7 +1,9 @@
 'use strict';
 
-define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
-  function(Class, Timer, Event, Input) {
+define([
+    'legion/class', 'legion/timer', 'legion/event',
+    'legion/input', 'legion/util'
+], function(Class, Timer, Event, Input, Util) {
   var Game = Class.extend({
 
     // The target FPS
@@ -18,6 +20,21 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
 
     // frame times
     _frameTimes: null,
+
+    // Whether it's a multiplayer game
+    multiplayer: false,
+
+    // Available server-side in multiplayer games
+    io: null,
+
+    // Available client-side in multiplayer games
+    socket: null,
+
+    // Current environment for the game
+    environment: null,
+
+    // A sequential object ID to uniquely identify all objects.
+    objectID: 0,
 
     /*
       init({fps: 60})
@@ -38,7 +55,7 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
         Input._bindGame(this);
       }
 
-      if (legion.isNode) {
+      if (legion.isNode && this.multiplayer) {
         this.initServer();
       } else {
         this.initClient();
@@ -46,13 +63,41 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
     },
 
     initClient: function() {
-
+      if (this.multiplayer) {
+        this.socket.on('connect', Util.hitch(this, this.onConnectionClient));
+        this.socket.on('sync', Util.hitch(this, function(syncObject) {
+          this.event.trigger('sync', [syncObject]);
+        }));
+        this.event.on('sync', Util.hitch(this, this.syncClient));
+      }
     },
 
     initServer: function() {
-
+      this.io.on('connection', Util.hitch(this, this.onConnectionServer));
     },
 
+    /*
+      Called on the server-side when a client connects.
+    */
+    onConnectionServer: function(socket) {
+      console.log('player connected!');
+      socket.emit('connect');
+    },
+
+    /*
+      Called on the client-side when the server responds to the client's
+      connection.  Triggered by having the server's socket emit 'connect'.
+    */
+    onConnectionClient: function() {
+      console.log('connected to server');
+    },
+
+    syncClient: function() {
+    },
+
+    syncServer: function() {
+      this.io.emit('sync', {clock: this.clock});
+    },
 
     /*
       loop() is the main game loop.
@@ -69,6 +114,10 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
       }
 
       this._update();
+
+      if (legion.isNode && this.multiplayer) {
+        this.syncServer();
+      }
 
       this.event._resolveEventQueue();
 
@@ -125,6 +174,10 @@ define(['legion/class', 'legion/timer', 'legion/event', 'legion/input'],
     setEnvironment: function(environment) {
       this.environment = environment;
       this.environment._bindGame(this);
+    },
+
+    _getObjectID: function() {
+      return this.objectID++;
     }
   });
 

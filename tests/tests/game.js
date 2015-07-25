@@ -20,10 +20,11 @@ define([
 
     it('Bind game to environment/entities', function() {
       var env = new Environment();
-      var ent = new Entity();
-      env.addEntity(ent);
       var g = new Game();
       g.setEnvironment(env);
+
+      var ent = new Entity();
+      env.addEntity(ent);
 
       chai.assert.equal(g, env.game);
       chai.assert.equal(g, ent.game);
