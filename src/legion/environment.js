@@ -79,9 +79,7 @@ define(['legion/class'], function(Class) {
         properties = typeof properties !== 'undefined' ? properties : {};
         this.parent(properties);
 
-        this.stage = new PIXI.Stage(
-          properties.backgroundColor || this.backgroundColor
-        );
+        this.stage = new PIXI.Stage(this.backgroundColor);
       },
 
       /*
