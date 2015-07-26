@@ -24,7 +24,10 @@ define([
                   Input.state(Input.keys.RIGHT) ? 1 : 0),
         this.speed * ( Input.state(Input.keys.UP) ? -1 : 
                   Input.state(Input.keys.DOWN) ? 1 : 0),
-        this.ax, this.ay
+        this.ax * ( Input.state(Input.keys.LEFT) ? -1 : 
+                  Input.state(Input.keys.RIGHT) ? 1 : 0),
+        this.ay * ( Input.state(Input.keys.UP) ? -1 : 
+                  Input.state(Input.keys.DOWN) ? 1 : 0)
 
       );
       this.parent();
