@@ -1,18 +1,13 @@
 'use strict';
 
-/**
- * @module legion/game
- */
 define([
     'legion/class', 'legion/timer', 'legion/event',
     'legion/input', 'legion/util'
 ], function(Class, Timer, Event, Input, Util) {
-  /**
-   * Creates a new Game.
-   * @class Game
-   * @extends module:legion/Class
-   */
-  var Game = Class.extend({
+
+  var Game = Class.extend(
+    /** @lends Game# */
+    {
 
     /**
      * The target FPS
@@ -91,9 +86,11 @@ define([
 
    /**
     * Initialize the Game class.
-    * @method
+    * @constructs
     * @param  {Object} properties - Class initialization properties
     * @return {undefined}
+    * @extends Class
+    * @classdesc The game class.
     */
     init: function(properties) {
       this.parent(properties);

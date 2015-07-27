@@ -13,7 +13,7 @@
         "lenient"    : true,
         "private"    : true,
         "recurse"    : true,
-        "template"   : "templates/default",
+        "template"   : "./node_modules/minami",
         "tutorials"  : "./docs/tutorials"
     },
     "tags": {

@@ -1,3 +1,5 @@
+'use strict';
+
 define([
   'legion/environment',
   'legion/game',
@@ -67,7 +69,7 @@ define([
     connectionMessage: function(socket) {
       var message = this.parent(socket);
       console.log("connectionMessage", message);
-      var bunny = new Bunny({clientID: message.clientID});
+      var bunny = new Bunny({clientID: message.clientID, sync: true});
       this.environment.addEntity(bunny);
       socket.bunny = bunny;
 
@@ -92,6 +94,7 @@ define([
     onConnectionClient: function(message) {
       this.parent(message);
       this.clientID = message.clientID;
+      message.bunny.sync = true;
       this.environment.addEntity(new Bunny(message.bunny));
     }
   })

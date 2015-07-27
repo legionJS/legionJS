@@ -35,9 +35,7 @@ define(['legion/class'], function(Class) {
       @param {object} entity
     */
     addEntity: function(entity) {
-      console.log("ADD ENTITY********");
       console.log(entity.serialize());
-      console.log("END ADD ENTITY*******");
       //this.entities.push(entity);
       entity._bindGame(this.game);
       this.entities[entity.id] = entity;
@@ -64,7 +62,8 @@ define(['legion/class'], function(Class) {
     */
     forEachEntity: function(func) {
       for (var id in this.entities) {
-        if (this.entities.hasOwnProperty(id) && this.entities[id] !== undefined) {
+        if (this.entities.hasOwnProperty(id) &&
+          this.entities[id] !== undefined) {
           func(this.entities[id]);
         }
       }
@@ -100,13 +99,8 @@ define(['legion/class'], function(Class) {
 
     _getSyncMessage: function() {
       var message = [];
-      /*for (var i = 0; i < this.entities.length; i++) {
-        if (legion.isNode || (this.entities[i].syncDirection == legion.syncDirection)) {
-          message.push(this.entities[i].serialize());
-        }
-      }*/
       this.forEachEntity(function(entity) {
-        if (legion.isNode || (entity.syncDirection == legion.syncDirection)) {
+        if (entity.sync) {
           message.push(entity.serialize());
         }
       });
@@ -119,11 +113,11 @@ define(['legion/class'], function(Class) {
         var entity = entities[i];
         //If the entity is new to the client/server.
         if (this.entities[entity.id] === undefined) {
-          this.addEntity(new legion.classes[entity.className](entity));
+          this.addEntity(new legion._classes[entity.className](entity));
           //this.entities.push(entity);
         } else {
           // Don't override local copy with servers if it's the player's entity.
-          if (!this.game.clientID || this.game.clientID != entity.clientID) {
+          if (!this.game.clientID || this.game.clientID !== entity.clientID) {
             this.entities[entity.id].mixin(entity);
           }
         }
@@ -181,7 +175,7 @@ define(['legion/class'], function(Class) {
         _render() renders the environment.
       */
       _render: function() {
-        legion.renderer.render(this.stage);
+        legion._renderer.render(this.stage);
       }
 
     });

@@ -20,10 +20,11 @@ define(['legion/class'], function(Class) {
     vx: 0,
     vy: 0,
 
-    // Whether this object should be synced from the client to the server
-    // or vice-versa.  Either 'up' or 'down'.  Each object should only be
-    // 'up' on at most a single client.
-    syncDirection: 'down',
+    // Whether an entity should be synced.  Determines whether the game
+    // will put the entity in the message it sends from the client
+    // to the server or vice-versa.  Might be true on either the client
+    // or the server, or both, or neither.  Defaults to false.
+    sync: false,
 
     // Current x/y acceleration in pixels/second
     ax: 0,
