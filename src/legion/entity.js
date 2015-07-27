@@ -3,7 +3,7 @@
 /*
   Entity is the base class for any game objects.
 */
-define(['legion/class'], function(Class)   {
+define(['legion/class'], function(Class) {
   return Class.extend({
 
     // Current x/y pos
@@ -27,7 +27,7 @@ define(['legion/class'], function(Class)   {
     */
     _update: function() {
       this.vx += this.ax * this.game.delta / 1000;
-      this.vy += this.ay * this.game.delta / 1000; 
+      this.vy += this.ay * this.game.delta / 1000;
       this.x += this.vx * this.game.delta / 1000;
       this.y += this.vy * this.game.delta / 1000;
     },
@@ -39,10 +39,10 @@ define(['legion/class'], function(Class)   {
         vy = vx[1];
         vx = vx[0];
       } else if (typeof vx === 'object') {
-          ay = vx.ay;
-          ax = vx.ax;
-          vy = vx.vy;
-          vx = vx.vx;
+        ay = vx.ay;
+        ax = vx.ax;
+        vy = vx.vy;
+        vx = vx.vx;
       }
 
       this.vx = vx === null || vx === undefined ? this.vx : vx;

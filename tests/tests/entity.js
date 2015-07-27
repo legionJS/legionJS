@@ -58,6 +58,18 @@ define([
       chai.assert.equal(a.vy, 200);
       chai.assert.equal(a.ax, 100);
       chai.assert.equal(a.ay, 200);
+
+      a.setVelocity({vx: 10, vy: 20, ax: 15, ay: 20});
+      chai.assert.equal(a.vx, 10);
+      chai.assert.equal(a.vy, 20);
+      chai.assert.equal(a.ax, 15);
+      chai.assert.equal(a.ay, 20);
+
+      a.setVelocity(undefined, undefined, 10, 10);
+      chai.assert.equal(a.vx, a.vx);
+      chai.assert.equal(a.vy, a.vy);
+      chai.assert.equal(a.ax, 10);
+      chai.assert.equal(a.ay, 10);
     });
   });
 });
