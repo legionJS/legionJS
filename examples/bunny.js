@@ -5,9 +5,9 @@ define([
 ], function(Entity, DisplayObject, Input) {
   return Entity.implement([DisplayObject]).extend({
 
+    className: 'Bunny',
     speed: 200,
     x: 200, y: 200,
-    className: 'Bunny',
 
     init: function(properties) {
       this.parent(properties);
@@ -25,12 +25,13 @@ define([
       // Make sure that the inputs only effect your own bunny.
       if (!legion.isNode && this.clientID === this.game.clientID) {
         this.setVelocity(
-          this.speed * ( Input.state(Input.keys.LEFT) ? -1 :
-                    Input.state(Input.keys.RIGHT) ? 1 : 0),
-          this.speed * ( Input.state(Input.keys.UP) ? -1 :
-                    Input.state(Input.keys.DOWN) ? 1 : 0)
+          ( Input.state(Input.keys.LEFT) ? -this.speed :
+                    Input.state(Input.keys.RIGHT) ? this.speed : null),
+          ( Input.state(Input.keys.UP) ? -this.speed :
+                    Input.state(Input.keys.DOWN) ? this.speed : null)
         );
       }
+
       this.parent();
     }
   });

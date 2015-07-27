@@ -14,8 +14,8 @@ define(['legion/class'], function(Class) {
     // Map of Entities, default {}
     entities: null,
 
-    // Hashmap of entities to access them by id
-    //entityMap: null,
+    // Render view background color, default 0x000000
+    backgroundColor: 0x000000,
 
     /*
       init()
@@ -151,10 +151,7 @@ define(['legion/class'], function(Class) {
         properties = typeof properties !== 'undefined' ? properties : {};
         this.parent(properties);
 
-        var backgroundColor = 'backgroundColor' in properties ?
-          properties.backgroundColor : 0x000000;
-
-        this.stage = new PIXI.Stage(backgroundColor);
+        this.stage = new PIXI.Stage(this.backgroundColor);
       },
 
       /*

@@ -13,7 +13,10 @@ if (!isNode) {
   window.global = window;
 }
 
-// Create legion global
+/**
+ * Create legion global
+ * @global
+ */
 global.legion = {
   isNode: isNode,
   renderer: null,
