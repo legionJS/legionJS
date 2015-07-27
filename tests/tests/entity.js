@@ -44,16 +44,20 @@ define([
       chai.assert.equal(a.a(), 'b');
     });
 
-    it('Set Velocity', function() {
+    it('Set Velocity along with Acceleration', function() {
       var a = new Entity();
 
-      a.setVelocity(10, 20);
+      a.setVelocity(10, 20, 10, 20);
       chai.assert.equal(a.vx, 10);
       chai.assert.equal(a.vy, 20);
+      chai.assert.equal(a.ax, 10);
+      chai.assert.equal(a.ay, 20);
 
-      a.setVelocity([100, 200]);
+      a.setVelocity([100, 200, 100, 200]);
       chai.assert.equal(a.vx, 100);
       chai.assert.equal(a.vy, 200);
+      chai.assert.equal(a.ax, 100);
+      chai.assert.equal(a.ay, 200);
     });
   });
 });

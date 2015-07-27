@@ -7,6 +7,7 @@ define([
 
     speed: 200,
     x: 200, y: 200,
+    ax: 1, ay: 2,
 
     init: function(properties) {
       var texture = PIXI.Texture.fromImage("game/bunny.png");
@@ -19,10 +20,10 @@ define([
 
     _update: function() {
       this.setVelocity(
-        this.speed * ( Input.state(Input.keys.LEFT) ? -1 : 
-                  Input.state(Input.keys.RIGHT) ? 1 : 0),
-        this.speed * ( Input.state(Input.keys.UP) ? -1 : 
-                  Input.state(Input.keys.DOWN) ? 1 : 0)
+        ( Input.state(Input.keys.LEFT) ? -this.speed :
+                  Input.state(Input.keys.RIGHT) ? this.speed : null),
+        ( Input.state(Input.keys.UP) ? -this.speed :
+                  Input.state(Input.keys.DOWN) ? this.speed : null)
       );
       this.parent();
     }

@@ -42,7 +42,7 @@ define(['legion/class', 'legion/util'], function(Class, Util) {
       }));
 
       http.listen(this.port, function() {
-        console.log('Legion!');
+        console.log('Serving Legion on 127.0.0.1:1337');
       });
 
       if (this.multiplayer) {
