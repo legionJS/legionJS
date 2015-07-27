@@ -25,7 +25,8 @@
     "url": "https://github.com/DrkSephy/legionJS/issues"
   },
   "scripts": {
-    "test": "sh testsuite.sh"
+    "test": "sh testsuite.sh",
+    "build-docs": "sh scripts/build-docs.sh"
   },
   "keywords": [
     "JavaScript",
