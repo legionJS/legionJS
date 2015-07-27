@@ -3,7 +3,7 @@
 /*
   Entity is the base class for any game objects.
 */
-define(['legion/class'], function(Class) {
+define(['legion/class'], function(Class)   {
   return Class.extend({
 
     // Current x/y pos
@@ -26,10 +26,10 @@ define(['legion/class'], function(Class) {
       _update() is called once each frame to update the entity.
     */
     _update: function() {
-      this.x += (this.vx * this.game.delta / 1000) +
-        0.5 * this.ax * ((this.game.delta / 1000) * (this.game.delta / 1000));
-      this.y += (this.vy * this.game.delta / 1000) +
-        0.5 * this.ay * ((this.game.delta / 1000) * (this.game.delta / 1000));
+      this.vx += this.ax * this.game.delta / 1000;
+      this.vy += this.ay * this.game.delta / 1000; 
+      this.x += this.vx * this.game.delta / 1000;
+      this.y += this.vy * this.game.delta / 1000;
     },
 
     setVelocity: function(vx, vy, ax, ay) {
@@ -38,12 +38,17 @@ define(['legion/class'], function(Class) {
         ax = vx[2];
         vy = vx[1];
         vx = vx[0];
+      } else if (typeof vx === 'object') {
+          ay = vx.ay;
+          ax = vx.ax;
+          vy = vx.vy;
+          vx = vx.vx;
       }
 
-      this.vx = vx;
-      this.vy = vy;
-      this.ax = ax;
-      this.ay = ay;
+      this.vx = vx === null || vx === undefined ? this.vx : vx;
+      this.vy = vy === null || vy === undefined ? this.vy : vy;
+      this.ax = ax === null || ax === undefined ? this.ax : ax;
+      this.ay = ay === null || ay === undefined ? this.ay : ay;
     }
   });
 });
