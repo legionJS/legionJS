@@ -1,45 +1,89 @@
 'use strict';
 
+/**
+ * @module legion/game
+ */
 define([
     'legion/class', 'legion/timer', 'legion/event',
     'legion/input', 'legion/util'
 ], function(Class, Timer, Event, Input, Util) {
+  /**
+   * Creates a new Game.
+   * @class Game
+   * @extends module:legion/Class
+   */
   var Game = Class.extend({
 
-    // The target FPS
+    /**
+     * The target FPS
+     * @type {Number}
+     * @default 60
+     */
     fps: 60,
 
-    // The current game time
+    /**
+     * The current game time
+     * @type {Date}
+     */
     clock: null,
 
-    // Whether the game is paused
+    /**
+     * Whether the game is paused
+     * @type {Boolean}
+     * @default false
+     */
     paused: false,
 
-    // The list of timers in the game
+    /**
+     * The list of timers in the game
+     * @type {Array.<Timer>}
+     * @private
+     */
     _timers: null,
 
-    // frame times
+    /**
+     * frame times
+     * @type {Array.<Number>}
+     * @private
+     */
     _frameTimes: null,
 
-    // Whether it's a multiplayer game
+    /**
+     * Whether it's a multiplayer game
+     * @type {Boolean}
+     * @default false
+     */
     multiplayer: false,
 
-    // Available server-side in multiplayer games
+    /**
+     * Available server-side in multiplayer games
+     * @type {io}
+     */
     io: null,
 
-    // Available client-side in multiplayer games
+    /**
+     * Available client-side in multiplayer games
+     * @type {socket}
+     */
     socket: null,
 
-    // Current environment for the game
+    /**
+     * Current environment for the game
+     * @type {Environment}
+     */
     environment: null,
 
-    // A sequential object ID to uniquely identify all objects.
+    /**
+     * A sequential object ID to uniquely identify all objects.
+     * @type {Number}
+     */
     objectID: 0,
 
-    /*
-      init({fps: 60})
-
-      @param {object} properties
+   /**
+    * Initialize the Game class.
+    * @method
+    * @param  {Object} properties - Class initialization properties
+    * @return {undefined}
     */
     init: function(properties) {
       this.parent(properties);
@@ -62,6 +106,11 @@ define([
       }
     },
 
+    /**
+     * Initialize the client.
+     * @method
+     * @return {undefined}
+     */
     initClient: function() {
       if (this.multiplayer) {
         this.socket.on('connect', Util.hitch(this, this.onConnectionClient));
@@ -72,36 +121,57 @@ define([
       }
     },
 
+    /**
+     * Initialize the server.
+     * @method
+     * @return {undefined}
+     */
     initServer: function() {
       this.io.on('connection', Util.hitch(this, this.onConnectionServer));
     },
 
-    /*
-      Called on the server-side when a client connects.
-    */
+    /**
+     * Called on the server-side when a client connects.
+     * @method
+     * @param  {Socket} socket - socket
+     * @return {undefined}
+     */
     onConnectionServer: function(socket) {
       console.log('player connected!');
       socket.emit('connect');
     },
 
-    /*
-      Called on the client-side when the server responds to the client's
-      connection.  Triggered by having the server's socket emit 'connect'.
-    */
+    /**
+     * Called on the client-side when the server responds to the client's
+     * connection. Triggered by having the server's socket emit 'connect'.
+     * @method
+     * @return {undefined}
+     */
     onConnectionClient: function() {
       console.log('connected to server');
     },
 
+    /**
+     * [syncClient description]
+     * @method
+     * @return {undefined}
+     */
     syncClient: function() {
     },
 
+    /**
+     * [syncServer description]
+     * @method
+     * @return {undefined}
+     */
     syncServer: function() {
       this.io.emit('sync', {clock: this.clock});
     },
 
-    /*
-      loop() is the main game loop.
-    */
+    /**
+     * The main game loop.
+     * @return {undefined}
+     */
     loop: function() {
       var newClock = (new Date()).getTime();
       this.delta = newClock - this.clock;
@@ -126,6 +196,13 @@ define([
       }
     },
 
+    /**
+     * [_measureFPS description]
+     * @method
+     * @private
+     * @param  {Number} newTime - The time in milliseconds
+     * @return {undefined}
+     */
     _measureFPS: function(newTime) {
       if (this._frameTimes.length >= this.fps) {
         this._frameTimes.shift();
@@ -136,24 +213,23 @@ define([
     },
 
 
-    /*
-      _update() is called once each frame to the current environment.
-    */
+    /**
+     * Called once each frame to the current environment.
+     * @return {undefined}
+     */
     _update: function() {
       if (this.environment) {
         this.environment._update();
       }
     },
 
-
-    /*
-      createTimer() creates and returns a timer for the given milliseconds.
-
-      Takes an object with:
-        target: The target time in milliseconds
-        loop: Whether to automatically loop the timer.
-
-      @param {int} milliseconds
+   /**
+    * Creates and returns a timer for the given milliseconds.
+    * @method
+    * @param  {Object} properties - New timer properties
+    * @param  {Number} properties.target - The target time in milliseconds
+    * @param  {Number} properties.loop - Whether to automatically loop the timer
+    * @return {Timer} A timer for the specified milliseconds
     */
     createTimer: function(properties) {
       var timer = new Timer(properties);
@@ -162,20 +238,33 @@ define([
     },
 
 
-    /*
-      _updateTimers() updates all the timers in this.timers
-    */
+    /**
+     * Updates all the timers in this.timers
+     * @method
+     * @private
+     * @param  {Number} delta - The time difference in milliseconds
+     * @return {undefined}
+     */
     _updateTimers: function(delta) {
       for (var i = 0; i < this._timers.length; i++) {
         this._timers[i].tick(delta);
       }
     },
 
+    /**
+     * Sets the environment
+     * @param  {Environment} environment - The environment to set to
+     * @return {undefined}
+     */
     setEnvironment: function(environment) {
       this.environment = environment;
       this.environment._bindGame(this);
     },
 
+    /**
+     * Gets the objectID
+     * @return {Number} The objectID incremented by 1
+     */
     _getObjectID: function() {
       return this.objectID++;
     }
