@@ -205,7 +205,7 @@ define(['legion/strings'], function(strings) {
      *
      * @constructs Class
      * @param  {object} - properties an object of properties to mixin
-     * @return {undefined}
+     * @classdesc The base legion Class.  All legion classes extend from this.
      */
     init: function(properties) {
       this.mixin(properties, true);
@@ -257,14 +257,18 @@ define(['legion/strings'], function(strings) {
     },
 
    /**
-    * serialize() returns a serializable object of the format:
+    * serialize() returns a serializable representation of the class in the
+    * format:
     *
+    * <pre>
     * {
     * 	id: id,
     * 	clientID: clientID,
     * 	className: className
     * }
-    * @return {object}
+    * </pre>
+    * 
+    * @return {object} The object representation
     */
     serialize: function() {
       return {id: this.id, clientID: this.clientID, className: this.className};
