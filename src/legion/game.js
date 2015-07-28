@@ -10,7 +10,7 @@ define([
     {
 
     /**
-     * The target FPS
+     * The target FPS (Frames per second)
      * @type {Number}
      * @default 60
      */
@@ -19,6 +19,7 @@ define([
     /**
      * The current game time
      * @type {Date}
+     * @default null
      */
     clock: null,
 
@@ -32,12 +33,14 @@ define([
     /**
      * The list of timers in the game
      * @type {Array.<Timer>}
+     * @default null
      * @private
      */
     _timers: null,
 
     /**
-     * frame times
+     * An array of the timestamps for each of the last X frames, where X is
+     * this.fps.
      * @type {Array.<Number>}
      * @private
      */
@@ -50,45 +53,61 @@ define([
      */
     multiplayer: false,
 
-    //Number of milliseconds between syncing TODO make private
+    /**
+     * The number of milliseconds between sending sync messages.
+     * @type {Number}
+     * @default 50
+     */
     msPerSync: 50,
 
-    //Timer for syncing
+    /**
+     * The timer for sending sync messages
+     * @type {Timer}
+     * @default null
+     */
     syncTimer: null,
 
     /**
-     * Available server-side in multiplayer games
-     * @type {io}
+     * socket.io instance available server-side in multiplayer games
+     * @type {socket.io}
+     * @default null
      */
     io: null,
 
     /**
-     * Available client-side in multiplayer games
+     * socket.io socket available client-side in multiplayer games
      * @type {socket}
+     * @default null
      */
     socket: null,
 
     /**
      * Current environment for the game
      * @type {Environment}
+     * @default null
      */
     environment: null,
 
     /**
      * A sequential object ID to uniquely identify all objects.
      * @type {Number}
+     * @default 0
      */
     objectID: 0,
 
-    // On the client-side this is the ID of the client.
+    /**
+     * On the client-side this is the ID of the client.  The clientID is the
+     * same as the socket.io socket id.
+     * @type {String}
+     * @default null
+     */
     clientID: null,
 
 
    /**
     * Initialize the Game class.
-    * @constructs
-    * @param  {Object} properties - Class initialization properties
-    * @return {undefined}
+    * @constructs Game
+    * @param  {Object} properties - an object of properties to mixin
     * @extends Class
     * @classdesc The game class.
     */
@@ -99,140 +118,150 @@ define([
       this.event = new Event();
       this._timers = [];
       this._frameTimes = [];
-      // On client-side bind the global Input object to this game
-      // On server it will be bound individually to each connection's
-      // input object.
 
       if (this.multiplayer) {
         this.syncTimer = this.createTimer({target: this.msPerSync, loop:true});
       }
 
+      // On client-side bind the global Input object to this game
+      // On server it will be bound individually to each connection's
+      // input object.
       if (!legion.isNode) {
         Input._bindGame(this);
       }
 
-      if (legion.isNode && this.multiplayer) {
-        this.initServer();
+      // Call the server/client specific init methods.
+      if (legion.isNode) {
+        this.serverInit();
       } else {
-        this.initClient();
+        this.clientInit();
       }
     },
 
     /**
-     * Initialize the client.
-     * @method
-     * @return {undefined}
+     * Client-side specific initialization.  Called automatically by the
+     * constructor on client-side.
      */
-    initClient: function() {
+    clientInit: function() {
       if (this.multiplayer) {
-        this.socket.on('connected', Util.hitch(this, this.onConnectionClient));
 
+        // Called when the server sends the client it's initial connection
+        this.socket.on('connected', Util.hitch(this, this.clientOnConnection));
+
+        // Called when the the server sends a sync message.  Trigger a sync
+        // event to handle the sync synchronously.
         this.socket.on('sync', Util.hitch(this, function(message) {
           this.event.trigger('sync', [message]);
         }));
-        this.event.on('sync', Util.hitch(this, this.syncClient));
+        this.event.on('sync', Util.hitch(this, this.clientHandleSync));
       }
     },
 
     /**
-     * Initialize the server.
-     * @method
-     * @return {undefined}
+     * Server-side specific initialization.  Called automatically by the
+     * constructor on server-side.
      */
-    initServer: function() {
-      this.io.on('connection', Util.hitch(this, this.onConnectionServer));
+    serverInit: function() {
+      // On the socket.io connection event trigger the connection event
+      this.io.on('connection', Util.hitch(this, function(socket) {
+        this.event.trigger('connection', [socket]);
+      }));
+      this.event.on('connection', Util.hitch(this, this.serverOnConnection));
 
-      /*this.socket.on('sync', Util.hitch(this, function(message) {
-        this.event.trigger('sync', [message]);
-      }));*/
-      this.event.on('sync', Util.hitch(this, this.syncServer));
+      // Create an event to handle client sync messages.
+      this.event.on('sync', Util.hitch(this, this.serverHandleSync));
     },
 
     /**
-     * Called on the server-side when a client connects.
-     * @method
+     * Called on the server-side when a client connects. Sets up listeners
+     * for the client's sync messages and for client disconnect.  Then emits
+     * a message to the client using
+     * [serverConnectionMessage]{@link Game.serverConnectionMessage}.
+     *
      * @param  {Socket} socket - socket
-     * @return {undefined}
      */
-    onConnectionServer: function(socket) {
-      console.log('player connected!');
-      //console.log(this.connectionMessage(socket));
-      //console.log(JSON.stringify(this.connectionMessage(socket)));
-      socket.emit('connected', this.connectionMessage(socket));
-      /*socket.on('sync', function(o) {
-        console.log(o[0].x);
-      });*/
-      //socket.on('sync', Util.hitch(this, this.syncServer));
+    serverOnConnection: function(socket) {
+      // Handle a sync message from the client.
       socket.on('sync', Util.hitch(this, function(message) {
         this.event.trigger('sync', [message]);
       }));
 
+      // Handle a client disconnecting from the server.
       socket.on('disconnect', Util.hitch(this, function() {
-        this.onDisconnect(socket);
+        this.serverOnDisconnect(socket);
       }));
+
+      // Send the connection message to the client.
+      socket.emit('connected', this.serverConnectionMessage(socket));
     },
 
-    /*
-      connectionMessage() generates the message that will be sent to the
-      client when it connects to the server.  It is in the form of a object.
+    /**
+     * Called when a client disconnects from the server.  Does nothing by
+     * default.
+     *
+     * @param  {Socket} socket - The socket that disconnected
+     */
+    serverOnDisconnect: function(socket) {},
 
-      Default is just the client ID:
-
-      {clientID:id}
-
-      @param socket
-      @return {object}
-    */
-    connectionMessage: function(socket) {
+    /**
+     * Generates a message to send to the client when it connects.  It is in
+     * the form of an object.  The default message just contains the clientID:
+     * <pre>
+     * {clientID: clientID}
+     * </pre>
+     * @param  {Socket} socket - The client's socket.io socket
+     */
+    serverConnectionMessage: function(socket) {
       return {clientID: socket.id};
     },
 
-    /*
-      Called on the client-side when the server responds to the client's
-      connection.  Triggered by having the server's socket emit 'connect'.
-    */
-    onConnectionClient: function(message) {
+    /**
+     * Called on the client-side when the client receives the server's
+     * connection message.  The message will contain info for the client to
+     * initialize the game, such as the client's character.
+     *
+     * @param  {object} message - object with information to setup client
+     */
+    clientOnConnection: function(message) {
       this.clientID = message.clientID;
-      console.log('connected to server');
     },
 
-    syncClient: function(message) {
-      //console.log(message);
+    /**
+     * Handle an incoming sync message from the server.
+     *
+     * @param  {Object|Object[]} message
+     */
+    clientHandleSync: function(message) {
       this.environment._sync(message);
     },
 
-    syncServer: function(message) {
-      //console.log(message[0].x)
+    /**
+     * Handle an incoming sync message from a client.
+     *
+     * @param  {Object|Object[]} message
+     */
+    serverHandleSync: function(message) {
       this.environment._sync(message);
     },
 
-    /*syncServer: function() {
-      this.io.emit('sync', {clock: this.clock});
-    },*/
-
-    sendServerStateToClient: function() {
+    /**
+     * Send the state of the server to the clients.
+     */
+    serverSendState: function() {
       var message = this.environment._getSyncMessage();
-      //console.log(message);
-      if (message.length > 0) {
-        //console.log("boO!");
-        //process.exit();
-      }
       this.io.emit('sync', message);
     },
 
-    /*
-      Serialize any entites with syncDirection=='up' in the environment
-      and send them to the server.
-    */
-    sendClientStateToServer: function() {
+    /**
+     * Send the state of the client to the server.
+     */
+    clientSendState: function() {
       var message = this.environment._getSyncMessage();
-      //console.log(message);
       this.socket.emit('sync', message);
     },
 
     /**
      * The main game loop.
-     * @return {undefined}
      */
     loop: function() {
       var newClock = (new Date()).getTime();
@@ -248,10 +277,10 @@ define([
       this._update();
 
       if (this.syncTimer.triggered()) {
-        if (legion.isNode && this.multiplayer) {
-          this.sendServerStateToClient();
+        if (legion.isNode) {
+          this.serverSendState();
         } else {
-          this.sendClientStateToServer();
+          this.clientSendState();
         }
       }
 
@@ -263,11 +292,9 @@ define([
     },
 
     /**
-     * [_measureFPS description]
-     * @method
+     * Measure the actual FPS
      * @private
-     * @param  {Number} newTime - The time in milliseconds
-     * @return {undefined}
+     * @param  {Number} newTime - The timestamp of the current frame
      */
     _measureFPS: function(newTime) {
       if (this._frameTimes.length >= this.fps) {
@@ -280,8 +307,8 @@ define([
 
 
     /**
-     * Called once each frame to the current environment.
-     * @return {undefined}
+     * Called once each frame to update the current environment.
+     * @private
      */
     _update: function() {
       if (this.environment) {
@@ -291,7 +318,7 @@ define([
 
    /**
     * Creates and returns a timer for the given milliseconds.
-    * @method
+    *
     * @param  {Object} properties - New timer properties
     * @param  {Number} properties.target - The target time in milliseconds
     * @param  {Number} properties.loop - Whether to automatically loop the timer
@@ -306,10 +333,9 @@ define([
 
     /**
      * Updates all the timers in this.timers
-     * @method
      * @private
-     * @param  {Number} delta - The time difference in milliseconds
-     * @return {undefined}
+     * @param  {Number} delta - The time difference since the last update
+     *                        in milliseconds
      */
     _updateTimers: function(delta) {
       for (var i = 0; i < this._timers.length; i++) {
@@ -318,9 +344,9 @@ define([
     },
 
     /**
-     * Sets the environment
+     * Sets the game to the given environment
+     *
      * @param  {Environment} environment - The environment to set to
-     * @return {undefined}
      */
     setEnvironment: function(environment) {
       this.environment = environment;
@@ -328,8 +354,10 @@ define([
     },
 
     /**
-     * Gets the objectID
-     * @return {Number} The objectID incremented by 1
+     * Gets a new unique object ID
+     *
+     * @private
+     * @return {Number} Object ID
      */
     _getObjectID: function() {
       return this.objectID++;
@@ -342,9 +370,6 @@ define([
   } else {
     return Game.extend({
 
-      /*
-        loop() is the main game loop.
-      */
       loop: function() {
         this.parent();
         this._render();

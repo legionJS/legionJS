@@ -45,6 +45,7 @@ define(['legion/class'], function(Class) {
      * Initialize the environment
      * @constructs Environment
      * @param  {object} properties - object of properties to mixin
+     * @extends Class
      * @classdesc Environments are the game world or levels.
      */
     init: function(properties) {

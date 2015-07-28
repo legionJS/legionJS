@@ -26,6 +26,7 @@ define(['legion/class'], function(Class) {
      * Initialize the event object.
      * @constructs Event
      * @param  {object} properties - an object of properties to mixin
+     * @extends Class
      * @classdesc Manages events.  Each instance of Event is distinct, with
      *            it's own events and triggers.  {@link Game} objects containing
      *            and instance of Event at game.event.

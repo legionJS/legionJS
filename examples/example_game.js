@@ -11,12 +11,12 @@ define([
   'game/bunny'
 ], function(Environment, Game, Entity, DisplayObject, Shape, Input, Util, Bunny) {
   return Game.extend({
-    initServer: function() {
+    serverInit: function() {
       this.parent(arguments);
       this.setEnvironment(new Environment());
     },
 
-    initClient: function() {
+    clientInit: function() {
       this.parent(arguments);
       var env = new Environment({backgroundColor: 0x66FF99});
       this.setEnvironment(env);
@@ -66,7 +66,7 @@ define([
     /*
       Create a bunny object for the player on the server.
     */
-    connectionMessage: function(socket) {
+    serverConnectionMessage: function(socket) {
       var message = this.parent(socket);
       console.log("connectionMessage", message);
       var bunny = new Bunny({clientID: message.clientID, sync: true});
@@ -78,12 +78,8 @@ define([
       return message;
     },
 
-    onDisconnect: function(socket) {
-      /*this.environment.forEachEntity(function(entity) {
-        if (entity.clientID == socket.id) {
-          delete entity;
-        }
-      });*/
+    serverOnDisconnect: function(socket) {
+      this.parent(socket);
       this.environment.removeEntity(socket.bunny.id);
       this.io.emit('removeEntity', socket.bunny.id);
     },
@@ -91,7 +87,7 @@ define([
     /*
       Add the bunny to the env when the server sends it.
     */
-    onConnectionClient: function(message) {
+    clientOnConnection: function(message) {
       this.parent(message);
       this.clientID = message.clientID;
       message.bunny.sync = true;

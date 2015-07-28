@@ -5,6 +5,7 @@
  * game are entities - players bullets, platforms, etc.
  * @param  {object} - properties an object of properties to mixin
  * @class Entity
+ * @extends Class
  */
 define(['legion/class'], function(Class) {
   return Class.extend(
