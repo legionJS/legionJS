@@ -208,6 +208,7 @@ define(['legion/strings'], function(strings) {
      * @classdesc The base legion Class.  All legion classes extend from this.
      */
     init: function(properties) {
+      properties = typeof properties !== 'undefined' ? properties : {};
       this.mixin(properties, true);
     },
 
@@ -267,7 +268,7 @@ define(['legion/strings'], function(strings) {
     * 	className: className
     * }
     * </pre>
-    * 
+    *
     * @return {object} The object representation
     */
     serialize: function() {

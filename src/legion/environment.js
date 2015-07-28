@@ -1,51 +1,81 @@
 'use strict';
 
 define(['legion/class'], function(Class) {
-  var Environment = Class.extend({
+  var Environment = Class.extend(
+  /** @lends Environment */
+  {
 
+    /**
+     * The class name, 'Environment'
+     * @type {String}
+     */
     className: 'Environment',
 
-    // Width of the environment in pixels, default 0
+    /**
+     * Width of the environment in pixels.
+     * @type {Number}
+     * @default 0
+     */
     width: 0,
 
-    // Height of the environment in pixels, default 0
+    /**
+     * Height of the environment in pixels.
+     * @type {Number}
+     * @default 0
+     */
     height: 0,
 
-    // Map of Entities, default {}
+    /**
+     * Map of entities in the environment with the entity IDs as the keys.
+     * @type {object}
+     * @default null
+     */
     entities: null,
 
-    // Render view background color, default 0x000000
+    /**
+     * A solid background color for the environment.
+     * @type {Number}
+     * @default 0x000000
+     */
     backgroundColor: 0x000000,
 
-    /*
-      init()
-
-      @param {object} properties
-    */
+    /**
+     * Initialize the environment
+     * @constructs Environment
+     * @param  {object} properties - object of properties to mixin
+     * @classdesc Environments are the game world or levels.
+     */
     init: function(properties) {
-      properties = typeof properties !== 'undefined' ? properties : {};
+      //Why was this here?
+      //properties = typeof properties !== 'undefined' ? properties : {};
       this.entities = {};
       //this.entityMap = {};
       this.parent(properties);
     },
 
-    /*
-      addEntity() adds the entity to the environment.
-
-      @param {object} entity
-    */
+    /**
+     * Add an entity to the environment and bind the game to the entity.
+     *
+     * @param  {Entity} entity - The entity to add to the environment.
+     */
     addEntity: function(entity) {
-      console.log(entity.serialize());
-      //this.entities.push(entity);
       entity._bindGame(this.game);
       this.entities[entity.id] = entity;
     },
 
+    /**
+     * Remove an entity from the environment by passing in the entity or
+     * it's ID.
+     *
+     * @param  {Entity|Number|String} entityID - the ID of the entity to remove.
+     * @return {Entity} - Return the removed entity.
+     */
     removeEntity: function(entityID) {
       // If the entity is passed in get its id
       if (entityID instanceof Class) {
         entityID = entityID.id;
       }
+
       var entity = this.entities[entityID];
 
       this.entities[entityID] = undefined;
@@ -53,13 +83,18 @@ define(['legion/class'], function(Class) {
       return entity;
     },
 
-
-
-    /*
-      forEachEntity() calls a function for each entity in the environment.
-
-      @param {function} func
-    */
+    /**
+     * forEachEntity calls a function for each entity in the environment.  The
+     * function is passed an entity.
+     *
+     * @param  {function} func - A function to execute on each entity.
+     * @example
+     *
+     * // Log each entity ID
+     * env.forEachEntity(function(entity) {
+     * 	console.log(entity.id);
+     * });
+     */
     forEachEntity: function(func) {
       for (var id in this.entities) {
         if (this.entities.hasOwnProperty(id) &&
@@ -69,34 +104,38 @@ define(['legion/class'], function(Class) {
       }
     },
 
-    /*
-      _update() is called once each frame and calls update for all
-      objects within it.
-    */
+    /**
+     * _update() is called once each frame and calls _update() for all the
+     * entites inside it.
+     * @private
+     */
     _update: function() {
-      /*for (var i = 0; i < this.entities.length; i++) {
-        this.entities[i]._update();
-      }*/
       this.forEachEntity(function(entity) {
         entity._update();
       });
     },
 
-    /*
-      _bindGame(game) overrides the default _bindGame to also bind all
-      entities in the environment to the game.
-    */
+    /**
+     * Binds a game to the environment and then binds the game to any entities
+     * already inside the environment.
+     *
+     * @param  {Game} game - the game to bind
+     * @private
+     */
     _bindGame: function(game) {
       this.parent(game);
-
-      /*for (var i = 0; i < this.entities.length; i++) {
-        this.entities[i]._bindGame(game);
-      }*/
       this.forEachEntity(function(entity) {
         entity._bindGame(game);
       });
     },
 
+    /**
+     * Returns a serializable object representing the state of the syncable
+     * entities inside the environment.
+     *
+     * @return {object[]} - an array of entity representations
+     * @private
+     */
     _getSyncMessage: function() {
       var message = [];
       this.forEachEntity(function(entity) {
@@ -107,7 +146,14 @@ define(['legion/class'], function(Class) {
       return message;
     },
 
-
+    /**
+     * _sync() takes a remote message (if this is the server, from clients, and
+     * if this is a client, from the server) and updates the environment with
+     * the properties in the message.
+     *
+     * @param  {object[]} entities - an array of serialized entities.
+     * @private
+     */
     _sync: function(entities) {
       for (var i = 0; i < entities.length; i++) {
         var entity = entities[i];
@@ -136,23 +182,13 @@ define(['legion/class'], function(Class) {
       // PIXI stage
       stage: null,
 
-      /*
-        init()
-
-        @param {object} properties
-      */
       init: function(properties) {
-        properties = typeof properties !== 'undefined' ? properties : {};
+        //properties = typeof properties !== 'undefined' ? properties : {};
         this.parent(properties);
 
         this.stage = new PIXI.Stage(this.backgroundColor);
       },
 
-      /*
-        addEntity() adds the entity to the environment.
-
-        @param {object} entity
-      */
       addEntity: function(entity) {
         this.parent(entity);
 
@@ -171,9 +207,6 @@ define(['legion/class'], function(Class) {
         return entity;
       },
 
-      /*
-        _render() renders the environment.
-      */
       _render: function() {
         legion._renderer.render(this.stage);
       }
