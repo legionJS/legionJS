@@ -9,6 +9,7 @@ define(['legion/class'], function(Class) {
      * are arrays of callback functions.
      * @type {object}
      * @private
+     * @default null
      */
     _events: null,
 
@@ -17,6 +18,7 @@ define(['legion/class'], function(Class) {
      * callbacks with the arguments passed to the event trigger.
      * @type {array}
      * @private
+     * @default null
      */
     _queue: null,
 

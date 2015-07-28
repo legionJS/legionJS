@@ -21,6 +21,7 @@ global.legion = {
   /**
    * Whether the game is executing within node.js or not.
    * @type {Boolean}
+   * @readonly
    */
   isNode: isNode,
 
@@ -30,6 +31,7 @@ global.legion = {
    * @type {PIXI.Renderer}
    * @default null
    * @private
+   * @readonly
    */
   _renderer: null,
 

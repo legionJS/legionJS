@@ -13,54 +13,64 @@ define(['legion/class'], function(Class) {
     /**
      * The class name, 'Entity'
      * @type {String}
+     * @default 'Entity'
+     * @readonly
      */
     className: 'Entity',
 
     /**
      * The current x position in pixels
      * @type {Number}
+     * @default 0
      */
     x: 0,
 
     /**
      * The current y position in pixels
      * @type {Number}
+     * @default 0
      */
     y: 0,
 
     /**
      * The width of the entity/rectangular bounding box.
      * @type {Number}
+     * @default 0
      */
     w: 0,
 
     /**
      * The height of the entity/rectangular bounding box.
      * @type {Number}
+     * @default 0
      */
     h: 0,
 
     /**
      * The x velocity in pixels per second
      * @type {Number}
+     * @default 0
      */
     vx: 0,
 
     /**
      * The y velocity in pixels per second
      * @type {Number}
+     * @default 0
      */
     vy: 0,
 
     /**
      * The x acceleration in pixels per second
      * @type {Number}
+     * @default 0
      */
     ax: 0,
 
     /**
      * The y acceleration in pixels per second
      * @type {Number}
+     * @default 0
      */
     ay: 0,
 
@@ -68,8 +78,9 @@ define(['legion/class'], function(Class) {
      * Whether an entity should be synced.  Determines whether the game
      * will put the entity in the message it sends from the client
      * to the server or vice-versa.  Might be true on either the client
-     * or the server, or both, or neither.  Defaults to false.
+     * or the server, or both, or neither.
      * @type {Boolean}
+     * @default false
      */
     sync: false,
 

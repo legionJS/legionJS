@@ -8,6 +8,8 @@ define(['legion/class'], function(Class) {
     /**
      * The class name, 'Environment'
      * @type {String}
+     * @default 'Environment'
+     * @readonly
      */
     className: 'Environment',
 

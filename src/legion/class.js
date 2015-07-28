@@ -178,18 +178,22 @@ define(['legion/strings'], function(strings) {
     /**
      * The class name
      * @type {String}
+     * @default 'Class'
+     * @readonly
      */
     className: 'Class',
 
     /**
      * The game that this object is bound to.
      * @type {Game}
+     * @default null
      */
     game: null,
 
     /**
      * Unique ID of the object.  Get's assigned when it's bound to a game.
      * @type {number|string}
+     * @default null
      */
     id: null,
 
@@ -197,6 +201,7 @@ define(['legion/strings'], function(strings) {
      * The ID of the client that "owns" this entity.  null means that the
      * server owns it.
      * @type {string}
+     * @default null
      */
     clientID: null,
 
