@@ -1,10 +1,6 @@
 'use strict';
 /* jshint browser: true */
 
-/**
- * @module legion
- */
-
 // Check if running on node.js
 var isNode = false;
 if (typeof module !== 'undefined' && module.exports) {
@@ -19,7 +15,7 @@ if (!isNode) {
 
 /**
  * legion global object
- * @exports legion
+ * @namespace
  */
 global.legion = {
   /**

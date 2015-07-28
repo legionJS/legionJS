@@ -204,7 +204,7 @@ define(['legion/strings'], function(strings) {
      * Initialize Class.  Just calls mixin with the properties.
      *
      * @constructs Class
-     * @param  {object} - properties an object of properties to mixin
+     * @param  {object} properties - an object of properties to mixin
      * @classdesc The base legion Class.  All legion classes extend from this.
      */
     init: function(properties) {
