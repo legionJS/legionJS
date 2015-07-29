@@ -140,7 +140,9 @@ define([
 
       // Call the server/client specific init methods.
       if (legion.isNode) {
-        this.serverInit();
+        if (this.multiplayer) {
+          this.serverInit();
+        }
       } else {
         this.clientInit();
       }
@@ -209,7 +211,7 @@ define([
      *
      * @param  {Socket} socket - The socket that disconnected
      */
-    serverOnDisconnect: function(socket) {},
+    serverOnDisconnect: function() {},
 
     /**
      * Generates a message to send to the client when it connects.  It is in
@@ -284,7 +286,7 @@ define([
 
       this._update();
 
-      if (this.syncTimer.triggered()) {
+      if (this.syncTimer && this.syncTimer.triggered()) {
         if (legion.isNode) {
           this.serverSendState();
         } else {

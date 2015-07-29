@@ -171,7 +171,7 @@ define(['legion/class'], function(Class) {
           }
         }
       }
-    },
+    }
   });
 
   // On node return an environment without rendering
