@@ -10,6 +10,14 @@ define([
     {
 
     /**
+     * The class name, 'Game'
+     * @type {String}
+     * @default 'Game'
+     * @readonly
+     */
+    className: 'Game',
+
+    /**
      * The target FPS (Frames per second)
      * @type {Number}
      * @default 60

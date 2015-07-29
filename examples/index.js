@@ -1,4 +1,4 @@
-// node test.js to Run server
+// node index.js to Run server
 // Go to localhost:
 
 define = require('node-requirejs-define');
@@ -14,7 +14,7 @@ define.config({
 
 define(['legion', 'legion/server'], function(legion, Server) {
   var server = new Server({
-    game: 'example_game', 
+    game: 'example_game',
     gameDir: __dirname,
     port: 1337,
     w: 500,
