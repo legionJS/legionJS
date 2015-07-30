@@ -27,15 +27,14 @@ define([
 
     it('Add Entities to Environment', function() {
       var e = new Environment({width: 100, height: 100});
-      var a = new Entity();
-      var b = new Entity();
+      var a = new Entity({id: 'a'});
+      var b = new Entity({id: 'b'});
 
       e.addEntity(a);
       e.addEntity(b);
 
-      chai.assert.equal(e.entities[0], a);
-      chai.assert.equal(e.entities[1], b);
-      chai.assert.equal(e.entities.length, 2);
+      chai.assert.equal(e.entities.a, a);
+      chai.assert.equal(e.entities.b, b);
     });
 
     it('Add Graphical Entities', function() {
@@ -65,13 +64,13 @@ define([
         game: {delta: 1, _getObjectID: function(){}}
       });
       var ent = new (Entity.implement([DisplayObject, Shape]))({
-        w: 50, h: 50, x: 300, y:300,
+        w: 50, h: 50, x: 300, y:300, id: 1,
         color: 0xFFFF00, shape: 'rect'
       });
       e.addEntity(ent);
 
       var ent2 = new (Entity.implement([DisplayObject, Shape]))({
-        w: 50, h: 50, x: 200, y:200,
+        w: 50, h: 50, x: 200, y:200, id: 2,
         color: 0xFFFF00, shape: 'rect'
       });
       e.addEntity(ent2);
