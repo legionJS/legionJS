@@ -25,7 +25,8 @@
     "url": "https://github.com/DrkSephy/legionJS/issues"
   },
   "scripts": {
-    "test": "sh testsuite.sh"
+    "test": "sh testsuite.sh",
+    "build-docs": "sh scripts/build-docs.sh"
   },
   "keywords": [
     "JavaScript",
@@ -47,6 +48,7 @@
     "jscs": "^1.11.3",
     "jsdoc": "^3.3.2",
     "jshint": "^2.6.0",
+    "minami": "^1.1.0",
     "mocha": "^2.1.0",
     "mocha-phantomjs": "git://github.com/docmarionum1/mocha-phantomjs.git",
     "mocha-phantomjs-istanbul": "0.0.2",
