@@ -8,7 +8,9 @@ define([
     });
 
     it('log', function() {
+      legion.debug = true;
       legion.log('Error Message');
+      legion.debug = false;
     });
   });
 });

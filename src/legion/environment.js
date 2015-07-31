@@ -75,7 +75,7 @@ define(['legion/class'], function(Class) {
      */
     removeEntity: function(entityID) {
       // If the entity is passed in get its id
-      if (entityID instanceof Class) {
+      if (entityID.id !== undefined) {
         entityID = entityID.id;
       }
 
@@ -100,10 +100,7 @@ define(['legion/class'], function(Class) {
      */
     forEachEntity: function(func) {
       for (var id in this.entities) {
-        if (this.entities.hasOwnProperty(id) &&
-          this.entities[id] !== undefined) {
-          func(this.entities[id]);
-        }
+        func(this.entities[id]);
       }
     },
 

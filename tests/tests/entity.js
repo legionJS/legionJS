@@ -1,5 +1,5 @@
 define([
-  'legion', 
+  'legion',
   'legion/entity'
 ], function(legion, Entity) {
   describe('Entity', function() {
@@ -36,7 +36,7 @@ define([
       var A = Entity.extend({
         a: function() { return 'a'; }
       });
-      
+
       var a = new A().mixin({
         a: function(){ return 'b'; }
       }, false);
@@ -50,6 +50,12 @@ define([
       a.setVelocity(10, 20, 10, 20);
       chai.assert.equal(a.vx, 10);
       chai.assert.equal(a.vy, 20);
+      chai.assert.equal(a.ax, 10);
+      chai.assert.equal(a.ay, 20);
+
+      a.setVelocity(15, 30);
+      chai.assert.equal(a.vx, 15);
+      chai.assert.equal(a.vy, 30);
       chai.assert.equal(a.ax, 10);
       chai.assert.equal(a.ay, 20);
 
@@ -70,6 +76,20 @@ define([
       chai.assert.equal(a.vy, a.vy);
       chai.assert.equal(a.ax, 10);
       chai.assert.equal(a.ay, 10);
+    });
+
+    it('Serialize', function() {
+      var props = {
+        x: 1, y: 2, w: 3, h: 4,
+        vx: 5, vy: 6, ax: 7, ay: 8,
+        id: 9, clientID: 10,
+        className: 'Entity'
+      };
+
+      var a = new Entity(props);
+      var s = a.serialize();
+
+      chai.assert.deepEqual(props, s);
     });
   });
 });
