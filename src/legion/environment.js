@@ -100,7 +100,10 @@ define(['legion/class'], function(Class) {
      */
     forEachEntity: function(func) {
       for (var id in this.entities) {
-        func(this.entities[id]);
+        if (this.entities.hasOwnProperty(id) &&
+          this.entities[id] !== undefined) {
+          func(this.entities[id]);
+        }
       }
     },
 
