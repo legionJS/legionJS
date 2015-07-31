@@ -75,7 +75,7 @@ define(['legion/class'], function(Class) {
      */
     removeEntity: function(entityID) {
       // If the entity is passed in get its id
-      if (entityID instanceof Class) {
+      if (entityID.id !== undefined) {
         entityID = entityID.id;
       }
 

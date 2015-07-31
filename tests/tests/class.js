@@ -184,5 +184,13 @@ define([
 
       chai.assert.equal(ab.letter, 'ab');
     });
+
+    it('Serialize', function() {
+      var props = {id: 1, clientID: 2, className: 'Class'};
+      var a = new Class(props);
+      var s = a.serialize();
+
+      chai.assert.deepEqual(props, s);
+    });
   });
 });
