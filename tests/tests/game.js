@@ -5,6 +5,18 @@ define([
   'legion/entity'
 ], function(legion, Game, Environment, Entity) {
   describe('Game', function() {
+    it('Init Multiplayer Game', function() {
+        var g = new Game({
+          multiplayer: true,
+          socket: {
+            on: function() {}
+          },
+          io: {
+            on: function() {}
+          }
+        });
+    });
+
     it('Create and Loop Game', function(done) {
       var g = new (Game.extend({
         loop: function() {

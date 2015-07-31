@@ -85,5 +85,77 @@ define([
         chai.assert.equal(ent2.y, ent2.displayObject.y);
       }
     });
+
+    it('Remove Entity', function() {
+      var e = new Environment({
+        width: 100, height: 100
+      });
+      e.stage = {
+        addChild: function() {},
+        removeChild: function() {}
+      };
+      var a = new Entity({id: 'a'});
+      var b = new Entity({id: 'b', displayObject: {}});
+
+      e.addEntity(a);
+      e.addEntity(b);
+
+      chai.assert.equal(e.entities.a, a);
+      chai.assert.equal(e.entities.b, b);
+
+      e.removeEntity(a);
+
+      chai.assert.equal(e.entities.a, undefined);
+      chai.assert.equal(e.entities.b, b);
+
+      e.removeEntity(b.id);
+
+      chai.assert.equal(e.entities.a, undefined);
+      chai.assert.equal(e.entities.b, undefined);
+    });
+
+    it('Bind Game', function() {
+      var e = new Environment({id: 'e'});
+      var a = new Entity({id: 'a'});
+      e.addEntity(a);
+      var game = {};
+      e._bindGame(game);
+      chai.assert.equal(game, a.game);
+    });
+
+    it('Sync Message', function() {
+      var e = new Environment();
+      var a = new Entity({id: 'a', sync: true});
+      var b = new Entity({id: 'b'});
+      e.addEntity(a);
+      e.addEntity(b);
+      var msg = e._getSyncMessage();
+      chai.assert.equal(msg.length, 1);
+      chai.assert.equal(msg[0].id, 'a');
+    });
+
+    it('Sync', function() {
+      var e = new Environment({game: {clientID: 1337}});
+      var a = new Entity({id: 'a', clientID: 1337});
+      var b = new Entity({id: 'b', clientID: 1338});
+      var c = new Entity({id: 'c', clientID: 1338});
+
+      e.addEntity(a);
+      e.addEntity(b);
+
+      var msg = [a.serialize(), b.serialize(), c.serialize()];
+      msg[0].x = 50;
+      msg[1].x = 50;
+
+      chai.assert.isDefined(e.entities.a);
+      chai.assert.equal(e.entities.b.x, 0);
+      chai.assert.isUndefined(e.entities.c);
+
+      e._sync(msg);
+
+      chai.assert.equal(a.x, 0);
+      chai.assert.equal(b.x, 50);
+      chai.assert.isDefined(e.entities.c);
+    });
   });
 });

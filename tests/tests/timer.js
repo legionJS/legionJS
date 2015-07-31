@@ -12,7 +12,7 @@ define([
         g.paused = true;
         chai.assert.equal(t.triggered(), 1);
         done();
-      }, 125);
+      }, 150);
     });
 
     it('Looping Timer', function(done) {
